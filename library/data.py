@@ -3,7 +3,7 @@ from zashel.utils import CsvAsDb, search_win_drive
 import os
 
 def initiate_data(config):
-    #TODO Emit Initiating Data
+    emit(InitializingDataSignal())
     remote_commitments = os.path.join(
         config["JAss"]["data"]["remote"],
         config["JAss"]["data"]["commitments"]["file"]
@@ -20,24 +20,24 @@ def initiate_data(config):
     complaints = CsvAsDb(remote_complaints, headers=complaints_headers, index=complaints_index)
     commitments.write(headers=True)
     complaints.write(headers=True)
+    emit(FinishedInitializingDataSignal())
 
 
 class SignaledCsdb(CsvAsDb):
     def __init__(self, *args, **kwargs):
-        #TODO Emit Instantitating
+        #TODO Emit Instantitating Why?
         super().__init__(self, *args, **kwargs)
 
-    def del_filter(self, *args, **kwargs):
-        #TODO Emit Filter Deleted
-        super().del_filter(*args, **kwargs)
+    def del_index(self, field):
+        super().del_index(field)
+        emit(DelIndexSignal(super()._file_path, field))
 
-    def del_index(self, *args, **kwargs):
-        #TODO Emit Index Deleted
-        super().del_index(*args, **kwargs)
-
-    def del_row(self, *args, *kwargs):
-        #TODO Emit Row Deleted
-        super().del_row(*args, **kwargs)
+    def del_row(self, index=None):
+        if index == None:
+            index = super()._active_row
+        unique_id = super()[super()._active_row]["unique_id"]
+        super().del_row(index)
+        emit(DelRowSignal(index, unique_id))
 
     def modify_row(self, field, value):
         #TODO Emit Row Modified
