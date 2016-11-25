@@ -3,6 +3,7 @@ from zashel.utils import CsvAsDb, search_win_drive
 import os
 
 def initiate_data(config):
+    #TODO Emit Initiating Data
     remote_commitments = os.path.join(
         config["JAss"]["data"]["remote"],
         config["JAss"]["data"]["commitments"]["file"]
@@ -20,6 +21,46 @@ def initiate_data(config):
     commitments.write(headers=True)
     complaints.write(headers=True)
 
+
+class SignaledCsdb(CsvAsDb):
+    def __init__(self, *args, **kwargs):
+        #TODO Emit Instantitating
+        super().__init__(self, *args, **kwargs)
+
+    def del_filter(self, *args, **kwargs):
+        #TODO Emit Filter Deleted
+        super().del_filter(*args, **kwargs)
+
+    def del_index(self, *args, **kwargs):
+        #TODO Emit Index Deleted
+        super().del_index(*args, **kwargs)
+
+    def del_row(self, *args, *kwargs):
+        #TODO Emit Row Deleted
+        super().del_row(*args, **kwargs)
+
+    def insert_row(self, *args, **kwargs):
+        #TODO Emit Row Inserted
+        super().insert_row(*args, **kwargs)
+
+    def set_active(self, *args, **kwargs):
+        #TODO Emit Unlock/Lock
+        super().set_active(*args, **kwargs)
+
+    def set_index(self, *args, **kwargs):
+        #TODO Emit Index Setted
+        super().set_index(*args, **kwargs)
+
+    def write(self, *args, **kwargs):
+        #TODO Emit Writing
+        super().write(*args, **kwargs)
+
+    def write_to(self, *args, **kwargs):
+        #TODO Emit Writing To...
+        super().write_to(*args, **kwargs)
+
+
+
 class Data():
     def __init__(self, config):
         self._config = config
@@ -31,7 +72,7 @@ class Data():
                 self._config.local_path,
                 self._config["JAss"]["data"]["commitments"]["file"]
                 )
-        self._commitments = CsvAsDb(self._remote_commitments)
+        self._commitments = SignaledCsdb(self._remote_commitments)
         self._commitments.write_to(self._local_commitments)
         self._remote_complaints = os.path.join(
             self._config["JAss"]["data"]["remote"],
@@ -41,7 +82,7 @@ class Data():
             self._config.local_path,
             self._config["JAss"]["data"]["complaints"]["file"]
         )
-        self._complaints = CsvAsDb(self._remote_complaints)
+        self._complaints = SignaledCsdb(self._remote_complaints)
         self._complaints.write_to(self._local_complaints)
 
     @property
