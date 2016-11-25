@@ -39,6 +39,10 @@ class SignaledCsdb(CsvAsDb):
         #TODO Emit Row Deleted
         super().del_row(*args, **kwargs)
 
+    def modify_row(self, field, value):
+        #TODO Emit Row Modified
+        super()._data[super()._active_row][field] = value
+
     def insert_row(self, *args, **kwargs):
         #TODO Emit Row Inserted
         super().insert_row(*args, **kwargs)
