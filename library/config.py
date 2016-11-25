@@ -29,8 +29,8 @@ class Config(cp.ConfigParser):
                     "location": "location_spanish",
                     "remote": r"app/jassbxi",
                     "data": {
-                        "Compromisos": {
-                            "file": "compromisos.csv",
+                        "commitments": {
+                            "file": "commitments.csv",
                             "fields": [
                                 "unique_id",
                                 "batch_name",
@@ -57,6 +57,7 @@ class Config(cp.ConfigParser):
                                 "status"
                                 ],
                             "location_spanish": {
+                                "commitments": "Compromisos",
                                 "unique_id": "ID",
                                 "batch_name": "Nombre Campaña",
                                 "year": "Año",
@@ -70,6 +71,7 @@ class Config(cp.ConfigParser):
                                 "comment": "Comentario"
                                 },
                             "location_english": {
+                                "commitments": "Commitments",
                                 "unique_id": "ID",
                                 "batch_name": "Campaign Name",
                                 "year": "Year",
@@ -117,9 +119,93 @@ class Config(cp.ConfigParser):
                                     }
                                 }
                             },
-                        "Incidencias": {
-                            "file": "incidencias.csv",
-
+                        "complaints": {
+                            "file": "compalints.csv",
+                            "fields": [
+                                "unique_id",
+                                "batch_name",
+                                "year",
+                                "user",
+                                "customer_id",
+                                "contact_phone",
+                                "day",
+                                "reason",
+                                "comment"
+                                ],
+                            "index": [
+                                "unique_id",
+                                "batch_name",
+                                "year",
+                                "user",
+                                "customer_id",
+                                "contact_phone",
+                                "day",
+                                "reason"
+                                ],
+                            "location_spanish": {
+                                "complaints": "Incidencias",
+                                "unique_id": "ID",
+                                "batch_name": "Nombre Campaña",
+                                "year": "Año",
+                                "user": "Usuario",
+                                "customer_id": "NIF",
+                                "contact_phone": "Teléfono de Contacto",
+                                "day": "Día",
+                                "reason": "Motivo",
+                                "comment": "Comentario"
+                                },
+                            "location_english": {
+                                "complaints": "Complaints",
+                                "unique_id": "ID",
+                                "batch_name": "Campaign Name",
+                                "year": "Year",
+                                "user": "User",
+                                "customer_id": "Customer ID",
+                                "contact_phone": "Contact Phone",
+                                "day": "Day",
+                                "reason": "Reason",
+                                "comment": "Comment"
+                                },
+                            "selectors": {
+                                "type": {
+                                    "unit_not_redelivered": {
+                                        "location_spanish": "No Devolución Equipo",
+                                        "location_english": "Unit Not Redelivered"
+                                        },
+                                    "unattended_cancellation": {
+                                        "location_spanish": "Baja No Cursada",
+                                        "location_english": "Unattended Cancellation"
+                                        },
+                                    "unaplied_discount": {
+                                        "location_spanish": "Descuento No Aplicado",
+                                        "location_english": "Unaplied Discount"
+                                        },
+                                    "suscripted_sms": {
+                                        "location_spanish": "SMS Suscripción",
+                                        "location_english": "Suscripted SMS"
+                                        },
+                                    "special_services_800": {
+                                        "location_spanish": "Servicios Especiales 800",
+                                        "location_english": "Special Servicies 800"
+                                        },
+                                    "supplementary_installation": {
+                                        "location_spanish": "Instalación Adicional",
+                                        "location_english": "Supplementary Installation"
+                                        },
+                                    "demise": {
+                                        "location_spanish": "Fallecimiento",
+                                        "location_english": "Demise"
+                                        },
+                                    "unacknowledged_service": {
+                                        "location_spanish": "Línea No Reconocida",
+                                        "location_english": "Unacknowledged Service"
+                                        },
+                                    "other_reason": {
+                                        "location_spanish": "Otros",
+                                        "location_english": "Other Reason"
+                                        },
+                                    },
+                            }
                             }
                         }
                     }
