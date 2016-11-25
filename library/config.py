@@ -11,7 +11,6 @@ class Config(cp.ConfigParser):
             os.makedirs(self.local_path)
             self.write()
         self.config_file = os.path.join(self.local_path, "config.ini")
-        self._initialize()
         self.read()
 
     def _initialize(self):
@@ -29,6 +28,7 @@ class Config(cp.ConfigParser):
                     "location": "location_spanish",
                     "remote": r"app/jassbxi",
                     "data": {
+                        "remote": r"app/jassbxi/data",
                         "commitments": {
                             "file": "commitments.csv",
                             "fields": [
@@ -205,13 +205,21 @@ class Config(cp.ConfigParser):
                                         "location_english": "Other Reason"
                                         },
                                     },
-                            }
+                                }
                             }
                         }
-                    }
+                    },
+                "VirtualGPIO": {
+                    "remote": r"app/jassbxi/communication",
+                    },
+                "WebSocket": {
+                    "dir": "127.0.0.1",
+                    "port": 5277
+                    },
                 })
 
     def read(self):
+        self._initialize()
         super().read(self, self.config_file)
 
     def write(self):
