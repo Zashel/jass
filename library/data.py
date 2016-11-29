@@ -22,7 +22,6 @@ def initiate_data(config):
     complaints.write(headers=True)
     emit(FinishedInitializingDataSignal())
 
-
 class SignaledCsdb(CsvAsDb):
     def __init__(self, *args, **kwargs):
         #TODO Emit Instantitating Why?
@@ -40,29 +39,32 @@ class SignaledCsdb(CsvAsDb):
         emit(DelRowSignal(index, unique_id))
 
     def modify_row(self, field, value):
-        #TODO Emit Row Modified
         super()._data[super()._active_row][field] = value
+        emit(ChangedRowSignal(super()._file_path, super()._data[super()._active_row]["unique_id"], field, value))
 
     def insert_row(self, *args, **kwargs):
-        #TODO Emit Row Inserted
         super().insert_row(*args, **kwargs)
+        emit(NewRowSignal(super()._file_path, super()._data[super()._active_row]))
 
     def set_active(self, *args, **kwargs):
-        #TODO Emit Unlock/Lock
+        if super()._active_row is not None:
+            emit(UnlockRowSignal(super()._file_path, super()._data[super()._active_row]["unique_id"]))
         super().set_active(*args, **kwargs)
+        emit(LockRowSignal(super()._file_path, super()._data[super()._active_row]["unique_id"]))
 
-    def set_index(self, *args, **kwargs):
-        #TODO Emit Index Setted
-        super().set_index(*args, **kwargs)
+    def set_index(self, field):
+        super().set_index(field)
+        emit(NewIndexSignal(super()._file_path, field))
 
     def write(self, *args, **kwargs):
-        #TODO Emit Writing
+        emit(WritingFileSignal(super()._file_path))
         super().write(*args, **kwargs)
+        emit(FinishedWritingFileSignal(super()._file_path))
 
     def write_to(self, *args, **kwargs):
-        #TODO Emit Writing To...
+        emit(WritingToFileSignal(super()._file_path))
         super().write_to(*args, **kwargs)
-
+        emit(FinishedWritingFileSignal(super()._file_path))
 
 
 class Data():

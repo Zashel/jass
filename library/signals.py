@@ -14,7 +14,7 @@ WritingFileSignal = Signal("writingfile", ("file",), (str,))
 WritingToFileSignal = Signal("writingtofile", ("old_file", "new_file"), (str, str))
 FinishedWritingFileSignal = Signal("finishedwritingfile", ("file",), (str,))
 
-ChangedRowSignal = Signal("changedrow", ("file", "unique_id", "data"), (str, str, dict))
+ChangedRowSignal = Signal("changedrow", ("file", "unique_id", "field", "value"), (str, str, str, str))
 NewRowSignal = Signal("newrow", ("file", "data"), (str, dict))
 DelRowSignal = Signal("delrow", ("file", "unique_id"), (str, str))
 
