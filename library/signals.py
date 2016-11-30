@@ -16,7 +16,6 @@ class HandlerRegister():
 
 def emit(signal): #I have to think it better
     HandlerRegister.emit(signal)
-#TODO def emit(signal)
 
 InitializingDataSignal = Signal("initializingdata")
 FinishedInitializingDataSignal = Signal("finishedinitializingdata")

@@ -120,7 +120,7 @@ class Config(cp.ConfigParser):
                                 }
                             },
                         "complaints": {
-                            "file": "compalints.csv",
+                            "file": "complaints.csv",
                             "fields": [
                                 "unique_id",
                                 "batch_name",
