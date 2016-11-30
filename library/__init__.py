@@ -1,6 +1,7 @@
 from .data import *
 from .config import Config
 from .handler import Handler
+from .signals import HandlerRegister
 from zashel.virtualgpio import VirtualGPIO
 from .websocket import *
 
@@ -8,7 +9,9 @@ class App():
     def __init__(self):
         self._config = Config()
         self._handler = Handler(self)
+        HandlerRegister.register_handler(self._handler)
         self._vgpio = VirtualGPIO(self._config["VirtualGPIO"]["remote"], handler=self._handler)
+
 
     def run(self):
         self._vgpio.run()

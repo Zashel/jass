@@ -1,7 +1,21 @@
 from zashel.websocket import WebSocketMetaSignal as Signal
 
-def emit(signal):
-    pass
+
+class HandlerRegister():
+    handlers = list()
+    @classmethod
+    def register_handler(cls, handler):
+        cls.handlers.append(handler)
+    @classmethod
+    def unregister_handler(cls, handler):
+        cls.handlers.remove(handler)
+    @classmethod
+    def emit(cls, signal):
+        for handler in cls.handlers:
+            handler.emit(signal)
+
+def emit(signal): #I have to think it better
+    HandlerRegister.emit(signal)
 #TODO def emit(signal)
 
 InitializingDataSignal = Signal("initializingdata")
