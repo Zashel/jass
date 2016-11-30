@@ -38,9 +38,13 @@ class SignaledCsdb(CsvAsDb):
         super().del_row(index)
         emit(DelRowSignal(index, unique_id))
 
-    def modify_row(self, field, value):
+    def modify(self, field, value):
         super()._data[super()._active_row][field] = value
         emit(ChangedRowSignal(super()._file_path, super()._data[super()._active_row]["unique_id"], field, value))
+
+    def modify_by_unique_id(self, unique_id, field, value):
+        index = super()._indexes["unique_id"][unique_id][0]
+        super()._data[index][field] = value
 
     def insert_row(self, *args, **kwargs):
         super().insert_row(*args, **kwargs)
