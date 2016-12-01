@@ -31,6 +31,10 @@ class SignaledCsdb(CsvAsDb):
         super().del_index(field)
         emit(DelIndexSignal(super()._file_path, field))
 
+    def _del_row_by_unique_id(self, unique_id):
+        index = super()._indexes["unique_id"][unique_id][0]
+        super().del_row(index)
+
     def del_row(self, index=None):
         if index == None:
             index = super()._active_row
@@ -46,9 +50,12 @@ class SignaledCsdb(CsvAsDb):
         index = super()._indexes["unique_id"][unique_id][0]
         super()._data[index][field] = value
 
-    def insert_row(self, *args, **kwargs):
-        super().insert_row(*args, **kwargs)
-        emit(NewRowSignal(super()._file_path, super()._data[super()._active_row]))
+    def _insert_row(self, data):
+        return super().insert_row(data)
+
+    def insert_row(self, data):
+        row = self._insert_row(data)
+        emit(NewRowSignal(super()._file_path, super()._data[row]))
 
     def set_active(self, *args, **kwargs):
         if super()._active_row is not None:

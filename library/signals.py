@@ -33,3 +33,9 @@ DelRowSignal = Signal("delrow", ("file", "unique_id"), (str, str))
 
 NewIndexSignal = Signal("newindex", ("file", "field"), (str, str))
 DelIndexSignal = Signal("delindex", ("file", "field"), (str, str))
+
+#GUI Signals
+
+OpenInterfaceSignal = Signal("openinterface", ("interface",), (str,))
+CloseInterfaceSignal = Signal("closeinterface", ("interface",), (str,))
+ActionInterfaceSignal = Signal("actioninterface", ("action", "interface", "variables"), (str, str, dict))

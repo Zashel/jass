@@ -4,9 +4,7 @@ from zashel.virtualgpio import VirtualGPIOBaseHandler
 class Handler(VirtualGPIOBaseHandler):
     def __init__(self, app):
         self._app = app
-        self._lock = dict()
-        self._lock[self.app.config["JAss"]["data"]["complaints"]["file"]] = list()
-        self._lock[self.app.config["JAss"]["data"]["commitments"]["file"]] = list()
+
 
     def emit(self, signal):
         self._app.vgpio.send_all(signal)
@@ -19,13 +17,45 @@ class Handler(VirtualGPIOBaseHandler):
 
     def signal_lockrow(self, file, unique_id):
         try:
-            self._lock[file].append(unique_id) #Thik it better
+            self._app._lock[file].append(unique_id) #Thik it better
         except:
             pass
 
     def signal_unlockrow(self, file, unique_id):
         try:
-            self._lock[file].remove(unique_id) #Thik it better
+            self._app._lock[file].remove(unique_id) #Thik it better
         except:
             pass
+
+    def signal_writingfile(self, filename):
+        self._app._file_lock.append(filename)
+
+    def signal_writingtofile(self, oldfile, newfile):
+        pass
+
+    def signal_finishedwritingfile(self, filename):
+        self._app._file_lock.remove(filename)
+
+    def datafile(self, file):
+        datafile = None
+        if file == self._config["JAss"]["data"]["complaints"]["file"]:
+            datafile = self._app.data.complaints
+        elif file == self._config["JAss"]["data"]["commitments"]["file"]:
+            datafile = self._app.data.commitments
+        return datafile
+
+    def signal_changedrow(self, file, unique_id, field, value):
+        datafile = self.datafile(file)
+        if datafile is not None:
+            datafile.modify_by_unique_id(unique_id, field, value)
+
+    def signal_newrow(self, file, data):
+        datafile = self.datafile(file)
+        if datafile is not None:
+            datafile._insert_row(file, data)
+
+    def signal_delrow(self, file, unique_id):
+        datafile = self.datafile(file)
+        if datafile is not None:
+            datafile._del_row_by_unique_id(unique_id)
 
