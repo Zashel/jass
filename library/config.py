@@ -7,14 +7,14 @@ class Config(cp.ConfigParser):
         self.this_path = os.path.dirname(os.path.abspath(__file__))
         self.root_path = os.path.split(self.this_path)[0]
         self.local_path = os.path.join(os.environ["LOCALAPPDATA"], "jassbxi")
+        self.config_file = os.path.join(self.local_path, "config.ini")
         if not os.path.exists(self.local_path):
             os.makedirs(self.local_path)
             self.write()
-        self.config_file = os.path.join(self.local_path, "config.ini")
         self.read()
 
     def _initialize(self):
-        super().read_dict({
+        super().read_dict({ #Puffff First shit...
                 "uAgent": {
                         "version": "7.5",
                         "server": "tresma81",

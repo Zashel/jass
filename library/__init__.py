@@ -11,7 +11,7 @@ class App():
     def __init__(self):
         self._config = Config()
         self._handler = Handler(self)
-        self._data = Data(self.config)
+        self._data = Data(self._config)
         HandlerRegister.register_handler(self._handler)
         self._vgpio = VirtualGPIO(self._config["VirtualGPIO"]["remote"], handler=self._handler)
         self._websocket = WebSocket(

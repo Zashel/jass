@@ -1,4 +1,4 @@
-from .library import execute
+from library import execute
 
 if __name__ == "__main__":
     execute()

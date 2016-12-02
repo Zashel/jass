@@ -87,6 +87,7 @@ class SignaledCsdb(CsvAsDb):
 class Data():
     def __init__(self, config):
         self._config = config
+        print(config["JAss"]["data"])
         self._remote_commitments = os.path.join(
                 self._config["JAss"]["data"]["remote"],
                 self._config["JAss"]["data"]["commitments"]["file"]
