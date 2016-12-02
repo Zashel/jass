@@ -59,3 +59,21 @@ class Handler(VirtualGPIOBaseHandler):
         if datafile is not None:
             datafile._del_row_by_unique_id(unique_id)
 
+    def signal_newindex(self, file, field):
+        datafile = self.datafile(file)
+        if datafile is not None:
+            datafile._set_index(field)
+
+    def signal_delindex(self, file, field):
+        datafile = self.datafile(file)
+        if datafile is not None:
+            datafile._del_index(field)
+
+    def signal_openinterface(self, interface):
+        pass
+
+    def signal_closeinterface(self, interface):
+        pass
+
+    def signal_actioninterface(self, action, interface, variables):
+        pass

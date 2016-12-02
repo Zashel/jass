@@ -27,8 +27,11 @@ class SignaledCsdb(CsvAsDb):
         #TODO Emit Instantitating Why?
         super().__init__(self, *args, **kwargs)
 
-    def del_index(self, field):
+    def _del_index(self, field):
         super().del_index(field)
+
+    def del_index(self, field):
+        self._del_index(field)
         emit(DelIndexSignal(super()._file_path, field))
 
     def _del_row_by_unique_id(self, unique_id):
@@ -63,8 +66,11 @@ class SignaledCsdb(CsvAsDb):
         super().set_active(*args, **kwargs)
         emit(LockRowSignal(super()._file_path, super()._data[super()._active_row]["unique_id"]))
 
-    def set_index(self, field):
+    def _set_index(self, field):
         super().set_index(field)
+
+    def set_index(self, field):
+        self._set_index(field)
         emit(NewIndexSignal(super()._file_path, field))
 
     def write(self, *args, **kwargs):
