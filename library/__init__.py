@@ -4,6 +4,7 @@ from .handler import Handler
 from .signals import HandlerRegister
 from zashel.virtualgpio import VirtualGPIO
 from zashel.websocket import WebSocket
+import subprocess
 
 
 class App():
@@ -46,6 +47,13 @@ class App():
     def data(self):
         return self._data
 
-if __name__ == "__main__":
+def execute():
     app = App()
     app.run()
+    subprocess.Popen([r"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe",
+                      "--app=http://{}:{}/".format(
+                          app.config["WebSocket"]["dir"],
+                          app.config["WebSocket"]["port"])])
+
+if __name__ == "__main__":
+    execute()
