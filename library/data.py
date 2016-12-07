@@ -87,24 +87,23 @@ class SignaledCsdb(CsvAsDb):
 class Data():
     def __init__(self, config):
         self._config = config
-        print(config["JAss"]["data"])
         self._remote_commitments = os.path.join(
-                self._config["JAss"]["data"]["remote"],
-                self._config["JAss"]["data"]["commitments"]["file"]
+                self._config["data"]["remote"],
+                self._config["commitments"]["file"]
                 )
         self._local_commitments = os.path.join(
                 self._config.local_path,
-                self._config["JAss"]["data"]["commitments"]["file"]
+                self._config["commitments"]["file"]
                 )
         self._commitments = SignaledCsdb(self._remote_commitments)
         self._commitments.write_to(self._local_commitments)
         self._remote_complaints = os.path.join(
-            self._config["JAss"]["data"]["remote"],
-            self._config["JAss"]["data"]["complaints"]["file"]
+            self._config["data"]["remote"],
+            self._config["complaints"]["file"]
         )
         self._local_complaints = os.path.join(
             self._config.local_path,
-            self._config["JAss"]["data"]["complaints"]["file"]
+            self._config["complaints"]["file"]
         )
         self._complaints = SignaledCsdb(self._remote_complaints)
         self._complaints.write_to(self._local_complaints)

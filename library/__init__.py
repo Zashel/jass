@@ -20,8 +20,8 @@ class App():
                 )
         self._file_lock = list()
         self._lock = dict()
-        self._lock[self.config["JAss"]["data"]["complaints"]["file"]] = list()
-        self._lock[self.config["JAss"]["data"]["commitments"]["file"]] = list()
+        self._lock[self.config["complaints"]["file"]] = list()
+        self._lock[self.config["commitments"]["file"]] = list()
 
     def run(self):
         self._vgpio.run()

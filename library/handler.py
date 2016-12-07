@@ -38,9 +38,9 @@ class Handler(VirtualGPIOBaseHandler):
 
     def datafile(self, file):
         datafile = None
-        if file == self._config["JAss"]["data"]["complaints"]["file"]:
+        if file == self._config["complaints"]["file"]:
             datafile = self._app.data.complaints
-        elif file == self._config["JAss"]["data"]["commitments"]["file"]:
+        elif file == self._config["commitments"]["file"]:
             datafile = self._app.data.commitments
         return datafile
 
