@@ -3,6 +3,7 @@ from zashel.virtualgpio import VirtualGPIOBaseHandler
 
 class Handler(VirtualGPIOBaseHandler):
     def __init__(self, app):
+        super().__init__()
         self._app = app
 
 

@@ -2,18 +2,20 @@ from .data import Data
 from .config import Config
 from .handler import Handler
 from .signals import HandlerRegister
+from zashel.utils import search_win_drive
 from zashel.virtualgpio import VirtualGPIO
 from zashel.websocket import WebSocket
 import subprocess
+import os
 
 
 class App():
     def __init__(self):
         self._config = Config()
         self._handler = Handler(self)
-        self._data = Data(self._config)
+        self._data = Data(self._config, True)
         HandlerRegister.register_handler(self._handler)
-        self._vgpio = VirtualGPIO(self._config["VirtualGPIO"]["remote"], handler=self._handler)
+        self._vgpio = VirtualGPIO(search_win_drive(self._config["VirtualGPIO"]["remote"]), handler=self._handler)
         self._websocket = WebSocket(
                 (self._config["WebSocket"]["dir"], self._config["WebSocket"]["port"]),
                 self._handler
