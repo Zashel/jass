@@ -1,11 +1,12 @@
 from zashel.virtualgpio import VirtualGPIOBaseHandler
+from zashel.websocket import WebSocketBaseHandler
 
 
-class Handler(VirtualGPIOBaseHandler):
+class Handler(VirtualGPIOBaseHandler, WebSocketBaseHandler):
     def __init__(self, app):
-        super().__init__()
+        WebSocketBaseHandler.__init__(self)
+        VirtualGPIOBaseHandler.__init__(self)
         self._app = app
-
 
     def emit(self, signal):
         self._app.vgpio.send_all(signal)

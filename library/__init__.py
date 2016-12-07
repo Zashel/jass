@@ -52,10 +52,14 @@ class App():
 def execute():
     app = App()
     app.run()
-    subprocess.Popen([r"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe",
+    subprocess.run([r"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe",
                       "--app=http://{}:{}/".format(
                           app.config["WebSocket"]["dir"],
-                          app.config["WebSocket"]["port"])])
+                          app.config["WebSocket"]["port"])], shell=True)
+    print("now")
+    while True:
+        pass
+
 
 if __name__ == "__main__":
     execute()
