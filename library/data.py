@@ -5,17 +5,17 @@ import os
 def initiate_data(config):
     emit(InitializingDataSignal())
     remote_commitments = os.path.join(
-        config["JAss"]["data"]["remote"],
-        config["JAss"]["data"]["commitments"]["file"]
+        config["data"]["remote"],
+        config["commitments"]["file"]
         )
     remote_complaints = os.path.join(
-        config["JAss"]["data"]["remote"],
-        config["JAss"]["data"]["complaints"]["file"]
+        config["data"]["remote"],
+        config["complaints"]["file"]
         )
-    commitments_headers = config["JAss"]["data"]["commitments"]["fields"]
-    commitments_index = config["JAss"]["data"]["commitments"]["index"]
-    complaints_headers = config["JAss"]["data"]["complaints"]["fields"]
-    complaints_index = config["JAss"]["data"]["complaints"]["index"]
+    commitments_headers = config["commitments"]["fields"].split("|")
+    commitments_index = config["commitments"]["index"].split("|")
+    complaints_headers = config["complaints"]["fields"].split("|")
+    complaints_index = config["complaints"]["index"].split("|")
     commitments = CsvAsDb(remote_commitments, headers=commitments_headers, index=commitments_index)
     complaints = CsvAsDb(remote_complaints, headers=complaints_headers, index=complaints_index)
     commitments.write(headers=True)
@@ -23,70 +23,68 @@ def initiate_data(config):
     emit(FinishedInitializingDataSignal())
 
 class SignaledCsdb(CsvAsDb):
-    def __init__(self, *args, **kwargs):
-        #TODO Emit Instantitating Why?
-        super().__init__(self, *args, **kwargs)
-
     def _del_index(self, field):
-        super().del_index(field)
+        self.del_index(field)
 
     def del_index(self, field):
         self._del_index(field)
-        emit(DelIndexSignal(super()._file_path, field))
+        emit(DelIndexSignal(self._file_path, field))
 
     def _del_row_by_unique_id(self, unique_id):
-        index = super()._indexes["unique_id"][unique_id][0]
-        super().del_row(index)
+        index = self._indexes["unique_id"][unique_id][0]
+        self.del_row(index)
 
     def del_row(self, index=None):
         if index == None:
-            index = super()._active_row
-        unique_id = super()[super()._active_row]["unique_id"]
-        super().del_row(index)
+            index = self._active_row
+        unique_id = self[self._active_row]["unique_id"]
+        self.del_row(index)
         emit(DelRowSignal(index, unique_id))
 
     def modify(self, field, value):
-        super()._data[super()._active_row][field] = value
-        emit(ChangedRowSignal(super()._file_path, super()._data[super()._active_row]["unique_id"], field, value))
+        self._data[self._active_row][field] = value
+        emit(ChangedRowSignal(self._file_path, self._data[self._active_row]["unique_id"], field, value))
 
     def modify_by_unique_id(self, unique_id, field, value):
-        index = super()._indexes["unique_id"][unique_id][0]
-        super()._data[index][field] = value
+        index = self._indexes["unique_id"][unique_id][0]
+        self._data[index][field] = value
 
     def _insert_row(self, data):
-        return super().insert_row(data)
+        return self.insert_row(data)
 
     def insert_row(self, data):
         row = self._insert_row(data)
-        emit(NewRowSignal(super()._file_path, super()._data[row]))
+        emit(NewRowSignal(self._file_path, self._data[row]))
 
     def set_active(self, *args, **kwargs):
-        if super()._active_row is not None:
-            emit(UnlockRowSignal(super()._file_path, super()._data[super()._active_row]["unique_id"]))
-        super().set_active(*args, **kwargs)
-        emit(LockRowSignal(super()._file_path, super()._data[super()._active_row]["unique_id"]))
+        if self._active_row is not None:
+            emit(UnlockRowSignal(self._file_path, self._data[self._active_row]["unique_id"]))
+        self.set_active(*args, **kwargs)
+        emit(LockRowSignal(self._file_path, super()._data[self._active_row]["unique_id"]))
 
     def _set_index(self, field):
         super().set_index(field)
 
     def set_index(self, field):
         self._set_index(field)
-        emit(NewIndexSignal(super()._file_path, field))
+        emit(NewIndexSignal(self._file_path, field))
 
     def write(self, *args, **kwargs):
-        emit(WritingFileSignal(super()._file_path))
+        emit(WritingFileSignal(self._file_path))
         super().write(*args, **kwargs)
-        emit(FinishedWritingFileSignal(super()._file_path))
+        emit(FinishedWritingFileSignal(self._file_path))
 
-    def write_to(self, *args, **kwargs):
-        emit(WritingToFileSignal(super()._file_path))
-        super().write_to(*args, **kwargs)
-        emit(FinishedWritingFileSignal(super()._file_path))
+    def write_to(self, new_path, headers=None):
+        emit(WritingToFileSignal(self._file_path, new_path))
+        super().write_to(new_path, headers)
+        emit(FinishedWritingFileSignal(self._file_path))
 
 
 class Data():
-    def __init__(self, config):
+    def __init__(self, config, init=False):
         self._config = config
+        if init is True:
+            initiate_data(self._config)
         self._remote_commitments = os.path.join(
                 self._config["data"]["remote"],
                 self._config["commitments"]["file"]
