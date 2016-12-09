@@ -2,6 +2,7 @@
 function parse_data(data) {
     console.log(data)
     if (data.signal === "ping") {
+        console.log("pong")
         send_pong()
     } else if (data.signal === "message") {
         console.log(data.text)
@@ -10,8 +11,10 @@ function parse_data(data) {
         webSocket.close()
     } else if (data.signal == "drawnewinterface") {
         if (data.type_parent == "TagName") {
-            document.getElementByTagName(data.parent_name)[0].innerHTML = data.data
-        }
+            document.getElementsByTagName(data.parent_name)[0].innerHTML = data.interface
+        } else if (data.type_parent == "Id") {
+            document.getElementById(data.parent_name).innerHTML = data.interface
+        };
     };
 };
 

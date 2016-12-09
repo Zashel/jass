@@ -43,4 +43,3 @@ ActionInterfaceSignal = Signal("actioninterface", ("action", "interface", "varia
 HiSignal = Signal("hi")
 DrawNewInterfaceSignal = Signal("drawnewinterface", ("type_parent", "parent_name", "interface"),
                                 (str, str, str))
-WriteInterfaceSignal = Signal("writeinterface", ("type_interface", "name", "data"), (str, str, str))

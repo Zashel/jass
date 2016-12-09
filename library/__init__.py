@@ -58,6 +58,7 @@ class App():
 def check(app):
     while app.executing is True:
         app.pong = False
+        print("ping")
         app.websocket.send_all(PingSignal())
         time.sleep(TIMEOUT)
         if app.pong is False:
@@ -76,6 +77,7 @@ def execute():
             pass
 
     finally:
+        print("farewell")
         app.vgpio.disconnect()
 
 
