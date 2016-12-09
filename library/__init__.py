@@ -2,19 +2,20 @@ from .data import Data, initiate_data
 from .config import Config
 from .handler import Handler
 from .signals import HandlerRegister
-from zashel.utils import search_win_drive
+from zashel.utils import search_win_drive, daemonize
 from zashel.virtualgpio import VirtualGPIO
 from zashel.websocket import WebSocket, PingSignal
 import subprocess
 import time
 import os
 
-TIMEOUT = 10
+TIMEOUT = 300
 
 class App():
     def __init__(self):
         self._config = Config()
         self.executing = True
+        self.pong = False
         self._handler = Handler(self)
         self._data = Data(self._config)
         HandlerRegister.register_handler(self._handler)
@@ -53,6 +54,16 @@ class App():
     def data(self):
         return self._data
 
+@daemonize
+def check(app):
+    while app.executing is True:
+        app.pong = False
+        print("Ping")
+        app.websocket.send_all(PingSignal())
+        time.sleep(TIMEOUT)
+        if app.pong is False:
+            app.executing = False
+
 def execute():
     try:
         app = App()
@@ -60,12 +71,11 @@ def execute():
         subprocess.run([r"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe",
                           "--app=file:///{}".format(
                               app.config["WebSocket"]["html"])])
-        time.sleep(10)
+        time.sleep(2)
+        check(app)
         while app.executing is True:
-            app.executing = False
-            print("Ping")
-            app.websocket.send_all(PingSignal())
-            time.sleep(TIMEOUT)
+            pass
+
     finally:
         app.vgpio.disconnect()
 

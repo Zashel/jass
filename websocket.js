@@ -71,7 +71,7 @@ function send_pong() {
 };
 
 function send_bye() {
-    webSocket.send("bye");
+    webSocket.send(signal("bye"));
 };
 
 function send_message(to, text) {

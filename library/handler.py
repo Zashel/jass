@@ -11,6 +11,10 @@ class Handler(VirtualGPIOBaseHandler, WebSocketBaseHandler):
     def emit(self, signal):
         self._app.vgpio.send_all(signal)
 
+    def terminate(self, counter):
+        if counter is 0:
+            self._app.executing = False
+
     def signal_initializingdatasignal(self):
         print("Initializing Data")
 
@@ -82,4 +86,9 @@ class Handler(VirtualGPIOBaseHandler, WebSocketBaseHandler):
 
     def signal_pong(self, signal=None, addr=None):
         print("Pong")
-        self._app.executing = True
+        self._app.pong = True
+
+    def signal_bye(self, signal=None, addr=None):
+        print("Bye")
+        self._close_connection(addr)
+        self._app.executing = False
