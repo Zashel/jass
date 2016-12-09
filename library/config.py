@@ -55,7 +55,8 @@ class Config(cp.ConfigParser):
                     },
                 "WebSocket": {
                     "dir": "127.0.0.1",
-                    "port": 5277
+                    "port": 5277,
+                    "html": r"C:\Users\ops28iu2\Desktop\jass\jassbxi.html"
                     },
                 })
 

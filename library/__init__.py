@@ -58,12 +58,13 @@ def execute():
         app = App()
         app.run()
         subprocess.run([r"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe",
-                          "--app=http://{}:{}/".format(
-                              app.config["WebSocket"]["dir"],
-                              app.config["WebSocket"]["port"])])
+                          "--app=file:///{}".format(
+                              app.config["WebSocket"]["html"])])
+        time.sleep(10)
         while app.executing is True:
             app.executing = False
-            app.websocket.send_all(PingSignal)
+            print("Ping")
+            app.websocket.send_all(PingSignal())
             time.sleep(TIMEOUT)
     finally:
         app.vgpio.disconnect()
