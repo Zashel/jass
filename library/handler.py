@@ -79,3 +79,6 @@ class Handler(VirtualGPIOBaseHandler, WebSocketBaseHandler):
 
     def signal_actioninterface(self, action, interface, variables):
         pass
+
+    def signal_pong(self):
+        self._app.executing = True

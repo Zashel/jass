@@ -1,21 +1,25 @@
-from .data import Data
+from .data import Data, initiate_data
 from .config import Config
 from .handler import Handler
 from .signals import HandlerRegister
 from zashel.utils import search_win_drive
 from zashel.virtualgpio import VirtualGPIO
-from zashel.websocket import WebSocket
+from zashel.websocket import WebSocket, PingSignal
 import subprocess
+import time
 import os
 
+TIMEOUT = 10
 
 class App():
     def __init__(self):
         self._config = Config()
+        self.executing = True
         self._handler = Handler(self)
-        self._data = Data(self._config, True)
+        self._data = Data(self._config)
         HandlerRegister.register_handler(self._handler)
         self._vgpio = VirtualGPIO(search_win_drive(self._config["VirtualGPIO"]["remote"]), handler=self._handler)
+        self._websocket = None
         self._websocket = WebSocket(
                 (self._config["WebSocket"]["dir"], self._config["WebSocket"]["port"]),
                 self._handler
@@ -50,15 +54,19 @@ class App():
         return self._data
 
 def execute():
-    app = App()
-    app.run()
-    subprocess.run([r"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe",
-                      "--app=http://{}:{}/".format(
-                          app.config["WebSocket"]["dir"],
-                          app.config["WebSocket"]["port"])], shell=True)
-    print("now")
-    while True:
-        pass
+    try:
+        app = App()
+        app.run()
+        subprocess.run([r"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe",
+                          "--app=http://{}:{}/".format(
+                              app.config["WebSocket"]["dir"],
+                              app.config["WebSocket"]["port"])])
+        while app.executing is True:
+            app.executing = False
+            app.websocket.send_all(PingSignal)
+            time.sleep(TIMEOUT)
+    finally:
+        app.vgpio.disconnect()
 
 
 if __name__ == "__main__":
