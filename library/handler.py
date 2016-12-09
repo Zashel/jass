@@ -1,5 +1,6 @@
 from zashel.virtualgpio import VirtualGPIOBaseHandler
 from zashel.websocket import WebSocketBaseHandler
+from .signals import *
 
 
 class Handler(VirtualGPIOBaseHandler, WebSocketBaseHandler):
@@ -85,10 +86,15 @@ class Handler(VirtualGPIOBaseHandler, WebSocketBaseHandler):
         pass
 
     def signal_pong(self, signal=None, addr=None):
-        print("Pong")
         self._app.pong = True
 
     def signal_bye(self, signal=None, addr=None):
-        print("Bye")
-        self._close_connection(addr)
+        WebSocketBaseHandler.signal_bye(self, signal, addr)
         self._app.executing = False
+
+    def signal_hi(self, signal=None, addr=None):
+        self._app.websocket.send_all(WriteInterfaceSignal("TagName", "BODY", login))
+
+login = """
+<h1>Login<br>
+"""

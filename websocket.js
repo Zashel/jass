@@ -8,7 +8,11 @@ function parse_data(data) {
     } else if (data.signal === "bye") {
         console.log("Connection close as requested by server")
         webSocket.close()
-    }
+    } else if (data.signal == "drawnewinterface") {
+        if (data.type_parent == "TagName") {
+            document.getElementByTagName(data.parent_name)[0].innerHTML = data.data
+        }
+    };
 };
 
 // Initialize WebSocket
@@ -29,7 +33,8 @@ function initWebSocket(direction, port, secure_connection, protocols=[], parser=
 
         // Set the main handlers
         webSocket.onopen = function() {
-            console.log("Connected");
+            console.log("Connected")
+            send_hi()
         };
         webSocket.onmessage = function(event) {
             var received = JSON.parse(event.data);
@@ -81,4 +86,8 @@ function send_message(to, text) {
             "text": text
         }
         ));
+};
+
+function send_hi() {
+    webSocket.send(signal("hi"))
 };
