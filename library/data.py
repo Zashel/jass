@@ -82,6 +82,13 @@ class SignaledCsdb(CsvAsDb):
         super().write_to(new_path, headers)
         emit(FinishedWritingFileSignal(self._file_path))
 
+    def to_send(self):
+        final = list()
+        for row in self._data:
+            rdict = {"rowid": row}
+            rdict.update(dict(self._data[row]))
+            final.append(rdict)
+        return final
 
 class Data():
     def __init__(self, config, init=False):

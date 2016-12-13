@@ -57,13 +57,13 @@ class Config(cp.ConfigParser):
                 "WebSocket": {
                     "dir": "127.0.0.1",
                     "port": 5277,
-                    "html": r"C:\Users\ops28iu2\Desktop\jass\jassbxi.html"
+                    "html": r"jassbxi.html"
                     },
                 })
 
     def read(self):
         self._initialize()
-        super().read(self, self.config_file)
+        super().read(self.config_file)
 
     def write(self):
         with open(self.config_file, "wb") as config_file:

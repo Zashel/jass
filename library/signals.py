@@ -36,9 +36,11 @@ DelIndexSignal = Signal("delindex", ("file", "field"), (str, str))
 
 #GUI Signals
 
-OpenInterfaceSignal = Signal("openinterface", ("interface",), (str,))
+OpenInterfaceSignal = Signal("openinterface", ("interface", "data"), (str, list))
 CloseInterfaceSignal = Signal("closeinterface", ("interface",), (str,))
 ActionInterfaceSignal = Signal("actioninterface", ("action", "interface", "variables"), (str, str, dict))
+
+LocaleSignal = Signal("locale", ("locale",), (dict,))
 
 HiSignal = Signal("hi")
 DrawNewInterfaceSignal = Signal("drawnewinterface", ("type_parent", "parent_name", "interface"),

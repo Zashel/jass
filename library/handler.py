@@ -100,8 +100,11 @@ class Handler(VirtualGPIOBaseHandler, WebSocketBaseHandler):
 
     def signal_hi(self, signal=None, addr=None):
         print("hi")
-        self._app.websocket.send_all(DrawNewInterfaceSignal(
-            "Id",
-            "script_locale",
-            " = ".join(["locale", Locale(self._app.config["JAss"]["location"]).to_json()]) #set action instead
+        self._app.websocket.send_all(LocaleSignal(
+            Locale(self._app.config["JAss"]["location"]).to_dict()
+            ))
+        time.sleep(1)
+        self._app.websocket.send_all(OpenInterfaceSignal(
+            "commitments_grid",
+            self._app.data.commitments.to_send()
             ))

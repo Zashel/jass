@@ -37,34 +37,23 @@
         <SCRIPT id="script_locale">
         </SCRIPT>
         <SCRIPT>
+            //Grids
             var grid;
-            var commitments_columns = [
-                {id:"unique_id", name:"ID", field:"unique_id", minWidth:60},
-                {id:"batch_name", name:"Batch Name", field:"batch_name", editor:Slick.Editors.Text, minWidth:60},
-                {id:"year", name:"Year", field:"year", minWidth:60},
-                {id:"user", name:"User", field:"user", minWidth:60},
-                {id:"customer_id", name:"Customer ID", field:"customer_id", editor:Slick.Editors.Text, minWidth:60},
-                {id:"contact_phone", name:"Phone", field:"phone", editor:Slick.Editors.Text, minWidth:60},
-                {id:"day", name:"Day", field:"day", editor:Slick.Editors.Date, minWidth:60},
-                {id:"hour", name:"Hour", field:"hour", editor:HourEditor, minWidth:60},
-                {id:"type", name:"Type", field:"type", editor:SelectorEditor(commitment_type_selections),
+            var commitments_columns = function(Locate) { return[
+                {id:"unique_id", name:Locate("unique_id"), field:"rowid", minWidth:60},
+                {id:"batch_name", name:Locate("batch_name"), field:"batch_name", editor:Slick.Editors.Text, minWidth:60},
+                {id:"year", name:Locate("year"), field:"year", minWidth:60},
+                {id:"user", name:Locate("user"), field:"user", minWidth:60},
+                {id:"customer_id", name:Locate("customer_id"), field:"customer_id", editor:Slick.Editors.Text, minWidth:60},
+                {id:"contact_phone", name:Locate("contact_phone"), field:"contact_phone", editor:Slick.Editors.Text, minWidth:60},
+                {id:"day", name:Locate("day"), field:"day", editor:Slick.Editors.Date, minWidth:60},
+                {id:"hour", name:Locate("hour"), field:"hour", editor:HourEditor, minWidth:60},
+                {id:"type", name:Locate("type"), field:"type", editor:SelectorEditor(commitment_type_selections),
                     formatter:SelectorFormatter, minWidth:60},
-                {id:"status", name:"Status", field:"status", minWidth:60},
-                {id:"comment", name:"Comment", field:"comment", editor:Slick.Editors.LongText, minWidth:60}
+                {id:"status", name:Locate("status"), field:"status", minWidth:60},
+                {id:"comment", name:Locate("comment"), field:"comment", editor:Slick.Editors.LongText, minWidth:60}
                 ];
-            var options = {
-                editable: true,
-                enableCellNavigation: true,
-                enableColumnReorder: true,
-                enableAddRow: true,
-                asyncEditorLoading: false,
-                autoEdit: true,
-                rowHeight: 30
                 };
-            function initiate_grid(columns, data) {
-                grid = new Slick.Grid("#main", data, columns, options);
-                }
-            initiate_grid(commitments_columns, data);
         </SCRIPT>
         <SCRIPT>
             initWebSocket('127.0.0.1', 5277);

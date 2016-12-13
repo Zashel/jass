@@ -1,20 +1,27 @@
+var locale = {}
+
 // Messages parser
 function parse_data(data) {
     console.log(data)
     if (data.signal === "ping") {
-        console.log("pong")
-        send_pong()
+        console.log("pong");
+        send_pong();
     } else if (data.signal === "message") {
-        console.log(data.text)
+        console.log(data.text);
     } else if (data.signal === "bye") {
-        console.log("Connection close as requested by server")
-        webSocket.close()
+        console.log("Connection close as requested by server");
+        webSocket.close();
     } else if (data.signal == "drawnewinterface") {
         if (data.type_parent == "TagName") {
-            document.getElementsByTagName(data.parent_name)[0].innerHTML = data.interface
+            document.getElementsByTagName(data.parent_name)[0].innerHTML = data.interface;
         } else if (data.type_parent == "Id") {
-            document.getElementById(data.parent_name).innerHTML = data.interface
+            document.getElementById(data.parent_name).innerHTML = data.interface;
         };
+    } else if (data.signal == "locale") {
+        console.log("locale recibido");
+        locale = data.locale;
+    } else if (data.signal == "openinterface") {
+        OpenInterface(data.interface, data.data)
     };
 };
 
@@ -106,8 +113,6 @@ function hour_mask(field) {
 
 //Editors:
 
-var locale = {}
-
 function HourEditor(args) {
     var $hour;
     var scope = this;
@@ -147,7 +152,7 @@ function HourEditor(args) {
   }
 
 function SelectorFormatter(row, cell, value, columnDef, dataContext) {
-    return locale[dataContext.selection];
+    return locale[value];
 }
 
 function SelectorEditor(items) {
@@ -185,6 +190,7 @@ function SelectorEditor(items) {
         };
         this.applyValue = function (item, state) {
           item.selection = state.selection;
+          item[args.column.field] = state.selection;
         };
         this.loadValue = function (item) {
           $selection.val(item.selection);
@@ -203,3 +209,36 @@ function SelectorEditor(items) {
 //Selectors:
 
 var commitment_type_selections = ["tc", "tr"]
+
+function Locate(field) {
+    data = locale[field];
+    if (data == undefined) {
+        return field;
+    } else {
+        return data;
+    }
+}
+
+//Grids
+var grid_options = {
+    editable: true,
+    enableCellNavigation: true,
+    enableColumnReorder: true,
+    enableAddRow: true,
+    asyncEditorLoading: false,
+    autoEdit: true,
+    rowHeight: 30
+    };
+
+function initiate_grid(columns, data) {
+    grid = new Slick.Grid("#main", data, columns, grid_options);
+    }
+
+//Interfaces
+
+function OpenInterface(interface, data) {
+    if (interface == "commitments_grid") {
+        document.getElementById("main").InnerHTML = ""
+        initiate_grid(commitments_columns(Locate), data)
+    }
+}

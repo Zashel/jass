@@ -68,9 +68,10 @@ def execute():
     try:
         app = App()
         app.run()
-        subprocess.run([r"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe",
-                          "--app=file:///{}".format(
-                              app.config["WebSocket"]["html"])])
+        subprocess.Popen([r"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe",
+                          "--app=file:///{}".format(os.path.join(
+                              os.getcwd(),
+                              app.config["WebSocket"]["html"]))])
         time.sleep(2)
         check(app)
         while app.executing is True:
