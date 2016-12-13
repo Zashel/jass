@@ -1,6 +1,8 @@
 from zashel.virtualgpio import VirtualGPIOBaseHandler
 from zashel.websocket import WebSocketBaseHandler
+from .config import Locale
 from .signals import *
+
 
 import time
 
@@ -98,13 +100,8 @@ class Handler(VirtualGPIOBaseHandler, WebSocketBaseHandler):
 
     def signal_hi(self, signal=None, addr=None):
         print("hi")
-        self._app.websocket.send_all(DrawNewInterfaceSignal("TagName", "BODY", login))
-        time.sleep(5)
-        self._app.websocket.send_all(DrawNewInterfaceSignal("Id", "foo", sadest))
-
-login = """
-<h1>Login</h1><br>
-<a href='#' onclick=send_bye()>Adi&oacute;s</a>
-<div id='foo'><div>
-"""
-sadest = """Pleaseeeeeeeeeeeeeeee"""
+        self._app.websocket.send_all(DrawNewInterfaceSignal(
+            "Id",
+            "script_locale",
+            " = ".join(["locale", Locale(self._app.config["JAss"]["location"]).to_json()]) #set action instead
+            ))

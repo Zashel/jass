@@ -1,5 +1,6 @@
 import os
 import configparser as cp
+import json
 
 class Config(cp.ConfigParser):
     def __init__(self):
@@ -204,3 +205,12 @@ class Locale():
     def __getattr__(self, attr):
         if attr in self._localization:
             return self._localization[attr][self.language]
+
+    def to_dict(self):
+        final = dict()
+        for item in self._localization:
+            final[item] = self._localization[item][self.language]
+        return final
+
+    def to_json(self):
+        return json.dumps(self.to_dict())

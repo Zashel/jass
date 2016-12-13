@@ -1,9 +1,71 @@
+<!DOCTYPE HTML>
 <HTML>
     <HEAD>
-        <TITLE>J-Ass BxI version</TITLE>
+        <META http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+        <TITLE>J-Ass BxI version - 0.2 Alpha</TITLE>
+        <LINK rel="stylesheet" href="SlickGrid/slick.grid.css" type="text/css"/>
+        <LINK rel="stylesheet" href="SlickGrid/css/smoothness/jquery-ui-1.8.16.custom.css" type="text/css"/>
+        <LINK rel="stylesheet" href="SlickGrid/slick-default-theme.css" type="text/css"/>
+        <LINK rel="stylesheet" href="jassbxi.css" type="text/css"/>
     </HEAD>
     <BODY>
-        <SCRIPT src='websocket.js'></SCRIPT>
+        <DIV class="logo"><P><H1><B>J-Ass</B></H1></DIV>
+        <DIV class="title">BxI Version - 0.2 Alpha</DIV>
+        <DIV class="menu"></DIV>
+        <DIV class="main" id="main"></DIV>
+        <DIV class="lateral"></DIV>
+        <DIV class="footer">Transcom W.W. 2016</DIV>
+
+        <SCRIPT src='jassbxi.js'></SCRIPT>
+
+        <SCRIPT src="SlickGrid/lib/firebugx.js"></SCRIPT>
+
+        <SCRIPT src="SlickGrid/lib/jquery-1.7.min.js"></SCRIPT>
+        <SCRIPT src="SlickGrid/lib/jquery-ui-1.8.16.custom.min.js"></SCRIPT>
+        <SCRIPT src="SlickGrid/lib/jquery.event.drag-2.2.js"></SCRIPT>
+
+        <SCRIPT src="SlickGrid/slick.core.js"></SCRIPT>
+        <SCRIPT src="SlickGrid/plugins/slick.cellrangedecorator.js"></SCRIPT>
+        <SCRIPT src="SlickGrid/plugins/slick.cellrangeselector.js"></SCRIPT>
+        <SCRIPT src="SlickGrid/plugins/slick.cellselectionmodel.js"></SCRIPT>
+        <SCRIPT src="SlickGrid/slick.grid.js"></SCRIPT>
+        <SCRIPT src="SlickGrid/slick.editors.js"></SCRIPT>
+        <SCRIPT src="SlickGrid/slick.formatters.js"></SCRIPT>
+        <SCRIPT id="script_data">
+        var data = [{},{},{}];
+        </SCRIPT>
+        <SCRIPT id="script_locale">
+        </SCRIPT>
+        <SCRIPT>
+            var grid;
+            var commitments_columns = [
+                {id:"unique_id", name:"ID", field:"unique_id", minWidth:60},
+                {id:"batch_name", name:"Batch Name", field:"batch_name", editor:Slick.Editors.Text, minWidth:60},
+                {id:"year", name:"Year", field:"year", minWidth:60},
+                {id:"user", name:"User", field:"user", minWidth:60},
+                {id:"customer_id", name:"Customer ID", field:"customer_id", editor:Slick.Editors.Text, minWidth:60},
+                {id:"contact_phone", name:"Phone", field:"phone", editor:Slick.Editors.Text, minWidth:60},
+                {id:"day", name:"Day", field:"day", editor:Slick.Editors.Date, minWidth:60},
+                {id:"hour", name:"Hour", field:"hour", editor:HourEditor, minWidth:60},
+                {id:"type", name:"Type", field:"type", editor:SelectorEditor(commitment_type_selections),
+                    formatter:SelectorFormatter, minWidth:60},
+                {id:"status", name:"Status", field:"status", minWidth:60},
+                {id:"comment", name:"Comment", field:"comment", editor:Slick.Editors.LongText, minWidth:60}
+                ];
+            var options = {
+                editable: true,
+                enableCellNavigation: true,
+                enableColumnReorder: true,
+                enableAddRow: true,
+                asyncEditorLoading: false,
+                autoEdit: true,
+                rowHeight: 30
+                };
+            function initiate_grid(columns, data) {
+                grid = new Slick.Grid("#main", data, columns, options);
+                }
+            initiate_grid(commitments_columns, data);
+        </SCRIPT>
         <SCRIPT>
             initWebSocket('127.0.0.1', 5277);
         </SCRIPT>
