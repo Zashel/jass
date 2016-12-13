@@ -98,6 +98,15 @@ function send_message(to, text) {
         ));
 };
 
+function send_open_interface(interface) {
+    webSocket.send(signal(
+        "openinterface", {
+            "interface": interface,
+            "data": []
+            }
+        ));
+};
+
 function send_hi() {
     webSocket.send(signal("hi"))
 };
@@ -238,7 +247,11 @@ function initiate_grid(columns, data) {
 
 function OpenInterface(interface, data) {
     if (interface == "commitments_grid") {
-        document.getElementById("main").InnerHTML = ""
-        initiate_grid(commitments_columns(Locate), data)
+        document.getElementById("main").InnerHTML = "";
+        initiate_grid(commitments_columns(Locate), data);
     }
+}
+
+function clean() {
+    document.getElementById('main').InnerHTML = "";
 }

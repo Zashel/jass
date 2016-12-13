@@ -80,8 +80,13 @@ class Handler(VirtualGPIOBaseHandler, WebSocketBaseHandler):
         if datafile is not None:
             datafile._del_index(field)
 
-    def signal_openinterface(self, interface):
-        pass
+    def signal_openinterface(self, signal, addr):
+        print(signal.interface)
+        if signal.interface == "commitments_grid":
+            self._app.websocket.send_all(OpenInterfaceSignal(
+                "commitments_grid",
+                self._app.data.commitments.to_send()
+            ))
 
     def signal_closeinterface(self, interface):
         pass
@@ -102,9 +107,4 @@ class Handler(VirtualGPIOBaseHandler, WebSocketBaseHandler):
         print("hi")
         self._app.websocket.send_all(LocaleSignal(
             Locale(self._app.config["JAss"]["location"]).to_dict()
-            ))
-        time.sleep(1)
-        self._app.websocket.send_all(OpenInterfaceSignal(
-            "commitments_grid",
-            self._app.data.commitments.to_send()
             ))
