@@ -3,10 +3,6 @@ from zashel.websocket import WebSocketBaseHandler
 from .config import Locale
 from .signals import *
 
-
-import time
-
-
 class Handler(VirtualGPIOBaseHandler, WebSocketBaseHandler):
     def __init__(self, app):
         WebSocketBaseHandler.__init__(self)
@@ -105,6 +101,19 @@ class Handler(VirtualGPIOBaseHandler, WebSocketBaseHandler):
 
     def signal_hi(self, signal=None, addr=None):
         print("hi")
-        self._app.websocket.send_all(LocaleSignal(
+        self._app.websocket.send_all(SetVariableSignal(
+            "locale",
             Locale(self._app.config["JAss"]["location"]).to_dict()
             ))
+        self._app.websocket.send_all(SetVariableSignal(
+            "commitment_type_selections",
+            self._app.config["commitments_selectors"]["type"].split("|")
+            ))
+        self._app.websocket.send_all(SetVariableSignal(
+            "commitment_status_selections",
+            self._app.config["commitments_selectors"]["status"].split("|")
+        ))
+        self._app.websocket.send_all(SetVariableSignal(
+            "complaint_type_selections",
+            self._app.config["complaints_selectors"]["type"].split("|")
+        ))

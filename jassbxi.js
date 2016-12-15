@@ -1,9 +1,12 @@
 var locale = {}
+var commitment_type_selections = []
+var commitment_status_selections = []
+var complaint_type_selections = []
 
 // Messages parser
 function parse_data(data) {
     console.log(data)
-    if (data.signal === "ping") {
+    if (data.signal === "ping") { //Cambiar a Switch
         console.log("pong");
         send_pong();
     } else if (data.signal === "message") {
@@ -17,11 +20,10 @@ function parse_data(data) {
         } else if (data.type_parent == "Id") {
             document.getElementById(data.parent_name).innerHTML = data.interface;
         };
-    } else if (data.signal == "locale") {
-        console.log("locale recibido");
-        locale = data.locale;
     } else if (data.signal == "openinterface") {
         OpenInterface(data.interface, data.data)
+    } else if (data.signal == "setvariable") {
+        window[data.variable] = data.json
     };
 };
 
@@ -215,9 +217,6 @@ function SelectorEditor(items) {
     return Editor
 }
 
-//Selectors:
-
-var commitment_type_selections = ["tc", "tr"]
 
 function Locate(field) {
     data = locale[field];

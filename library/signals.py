@@ -41,6 +41,7 @@ CloseInterfaceSignal = Signal("closeinterface", ("interface",), (str,))
 ActionInterfaceSignal = Signal("actioninterface", ("action", "interface", "variables"), (str, str, dict))
 
 LocaleSignal = Signal("locale", ("locale",), (dict,))
+SetVariableSignal = Signal("setvariable", ("variable", "json"), (str, object))
 
 HiSignal = Signal("hi")
 DrawNewInterfaceSignal = Signal("drawnewinterface", ("type_parent", "parent_name", "interface"),

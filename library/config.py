@@ -46,7 +46,7 @@ class Config(cp.ConfigParser):
                     "fields": "unique_id|batch_name|year|user|customer_id|contact_phone|day|reason|comment",
                     "index": "unique_id|batch_name|year|user|customer_id|contact_phone|day|reason",
                     },
-                "complaints-selectors": {
+                "complaints_selectors": {
                     "type":
                         "unit_not_redelivered|unattended_cancellation|unaplied_discount|suscripted_sms|"+
                         "special_services_800|supplementary_installation|demise|unacknowledged_service|other_reason",
