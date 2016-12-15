@@ -29,7 +29,7 @@ div.menu {
     background-color:yellow;
     width:175px;
 }
-div.main {
+.main{
     left:175px;
     top:100px;
     bottom:220px;

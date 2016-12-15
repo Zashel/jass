@@ -12,10 +12,12 @@
         <DIV class="logo"><P><H1><B>J-Ass</B></H1></DIV>
         <DIV class="title">BxI Version - 0.2 Alpha</DIV>
         <DIV class="menu">
-            <a href="#" onclick="clean()">index</a><br>
-            <a href="#" onclick="send_open_interface('commitments_grid')">commitments_grid</a>
+            <a href="#" onclick="set_div_visible('main')">index</a><br>
+            <a href="#" onclick="set_div_visible('commitments_grid')">commitments_grid</a>
         </DIV>
-        <DIV class="main" id="main"></DIV>
+        <DIV class="main" id="commitments_grid"></DIV>
+        <DIV class="main" id="complaints_grid"></DIV>
+        <DIV class="main" id="main">¡Hola!</DIV>
         <DIV class="submain" id="submain"></DIV>
         <DIV class="lateral"></DIV>
         <DIV class="footer">Transcom W.W. 2016</DIV>
@@ -64,6 +66,7 @@
                 };
         </SCRIPT>
         <SCRIPT>
+            set_div_visible("main");
             initWebSocket('127.0.0.1', 5277);
         </SCRIPT>
     </BODY>

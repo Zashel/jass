@@ -77,12 +77,7 @@ class Handler(VirtualGPIOBaseHandler, WebSocketBaseHandler):
             datafile._del_index(field)
 
     def signal_openinterface(self, signal, addr):
-        print(signal.interface)
-        if signal.interface == "commitments_grid":
-            self._app.websocket.send_all(OpenInterfaceSignal(
-                "commitments_grid",
-                self._app.data.commitments.to_send()
-            ))
+        pass
 
     def signal_closeinterface(self, interface):
         pass
@@ -116,4 +111,12 @@ class Handler(VirtualGPIOBaseHandler, WebSocketBaseHandler):
         self._app.websocket.send_all(SetVariableSignal(
             "complaint_type_selections",
             self._app.config["complaints_selectors"]["type"].split("|")
+        ))
+        self._app.websocket.send_all(OpenInterfaceSignal(
+            "commitments_grid",
+            self._app.data.commitments.to_send()
+        ))
+
+        self._app.websocket.send_all(SetDivVisibleSignal(
+            "main"
         ))

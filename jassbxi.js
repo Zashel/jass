@@ -10,21 +10,30 @@ function parse_data(data) {
         case "ping":
             console.log("pong");
             send_pong();
+            break;
         case "message":
             console.log(data.text);
+            break;
         case "bye":
             console.log("Connection close as requested by server");
             webSocket.close();
+            break;
         case "drawnewinterface":
             if (data.type_parent == "TagName") {
                 document.getElementsByTagName(data.parent_name)[0].innerHTML = data.interface;
             } else if (data.type_parent == "Id") {
                 document.getElementById(data.parent_name).innerHTML = data.interface;
             };
+            break;
         case "openinterface":
             OpenInterface(data.interface, data.data)
+            break;
         case "setvariable":
             window[data.variable] = data.json
+            break;
+        case "setdivvisible":
+            set_div_visible(data.div_id)
+            break;
     };
 };
 
@@ -239,19 +248,31 @@ var grid_options = {
     rowHeight: 30
     };
 
-function initiate_grid(columns, data) {
-    grid = new Slick.Grid("#main", data, columns, grid_options);
-    }
+function initiate_grid(name, columns, data) {
+    grid = new Slick.Grid("#"+name, data, columns, grid_options);
+    };
 
 //Interfaces
 
+function set_div_visible(div_id) {
+     document.getElementById("main").style.display="none";
+     document.getElementById("commitments_grid").style.display="none";
+     document.getElementById("complaints_grid").style.display="none";
+     document.getElementById(div_id).style.display="block";
+
+};
+
 function OpenInterface(interface, data) {
-    if (interface == "commitments_grid") {
-        document.getElementById("main").InnerHTML = "";
-        initiate_grid(commitments_columns(Locate), data);
-    }
-}
+    switch (interface) {
+        case "commitments_grid":
+            document.getElementById("commitments_grid").InnerHTML = "";
+            initiate_grid("commitments_grid", commitments_columns(Locate), data);
+            set_div_visible("commitments_grid");
+            break;
+    };
+};
 
 function clean() {
+    grid = "";
     document.getElementById('main').InnerHTML = "";
-}
+};
