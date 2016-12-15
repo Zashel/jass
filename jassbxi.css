@@ -32,8 +32,15 @@ div.menu {
 div.main {
     left:175px;
     top:100px;
+    bottom:220px;
+    width:800px;
+}
+div.submain {
+    left:175px;
     bottom:20px;
     width:800px;
+    background-color:green;
+    height:200px;
 }
 div.lateral {
     left:975px;
