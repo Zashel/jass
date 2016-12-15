@@ -14,6 +14,7 @@
         <DIV class="menu">
             <a href="#" onclick="set_div_visible('main')">index</a><br>
             <a href="#" onclick="set_div_visible('commitments_grid')">commitments_grid</a>
+            <a href="#" onclick="set_div_visible('complaints_grid')">complaints_grid</a>
         </DIV>
         <DIV class="main" id="commitments_grid"></DIV>
         <DIV class="main" id="complaints_grid"></DIV>
@@ -44,12 +45,11 @@
         </SCRIPT>
         <SCRIPT>
             //Grids
-            var grid;
             var commitments_columns = function(Locate) { return[
-                {id:"unique_id", name:Locate("unique_id"), field:"rowid", minWidth:60},
-                {id:"batch_name", name:Locate("batch_name"), field:"batch_name", editor:Slick.Editors.Text,
-                    minWidth:60},
-                {id:"year", name:Locate("year"), field:"year", minWidth:60},
+                {id:"unique_id", name:Locate("unique_id"), field:"unique_id", minWidth:60},
+                //{id:"batch_name", name:Locate("batch_name"), field:"batch_name", editor:Slick.Editors.Text,
+                //    minWidth:60},
+                //{id:"year", name:Locate("year"), field:"year", minWidth:60},
                 {id:"user", name:Locate("user"), field:"user", minWidth:60},
                 {id:"customer_id", name:Locate("customer_id"), field:"customer_id", editor:Slick.Editors.Text,
                     minWidth:60},
@@ -63,7 +63,23 @@
                     editor:SelectorEditor(commitment_status_selections), formatter:SelectorFormatter, minWidth:60},
                 {id:"comment", name:Locate("comment"), field:"comment", editor:Slick.Editors.LongText, minWidth:60}
                 ];
-                };
+            };
+            var complaints_columns = function(Locate) { return [
+                {id:"unique_id", name:Locate("unique_id"), field:"unique_id", minWidth:60},
+                //{id:"batch_name", name:Locate("batch_name"), field:"batch_name", editor:Slick.Editors.Text,
+                //    minWidth:60},
+                //{id:"year", name:Locate("year"), field:"year", minWidth:60},
+                {id:"user", name:Locate("user"), field:"user", minWidth:60},
+                {id:"customer_id", name:Locate("customer_id"), field:"customer_id", editor:Slick.Editors.Text,
+                    minWidth:60},
+                {id:"contact_phone", name:Locate("contact_phone"), field:"contact_phone",
+                    editor:Slick.Editors.Text, minWidth:60},
+                {id:"day", name:Locate("day"), field:"day", editor:Slick.Editors.Date, minWidth:60},
+                {id:"reason", name:Locate("reason"), field:"reason",
+                    editor:SelectorEditor(complaint_reason_selections), formatter:SelectorFormatter, minWidth:60},
+                {id:"comment", name:Locate("comment"), field:"comment", editor:Slick.Editors.LongText, minWidth:60}
+                ];
+            };
         </SCRIPT>
         <SCRIPT>
             set_div_visible("main");

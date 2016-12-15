@@ -1,7 +1,11 @@
-var locale = {}
-var commitment_type_selections = []
-var commitment_status_selections = []
-var complaint_type_selections = []
+var locale = {};
+var commitment_type_selections = [];
+var commitment_status_selections = [];
+var complaint_reason_selections = [];
+
+var commitment_grid;
+var commitment_grid;
+var complaint_grid;
 
 // Messages parser
 function parse_data(data) {
@@ -249,8 +253,15 @@ var grid_options = {
     };
 
 function initiate_grid(name, columns, data) {
-    grid = new Slick.Grid("#"+name, data, columns, grid_options);
-    };
+    window[name] = new Slick.Grid("#"+name, data, columns, grid_options);
+    window[name].onAddNewRow.subscribe(function (e, args) {
+      var item = args.item;
+      window[name].invalidateRow(data.length);
+      data.push(item);
+      window[name].updateRowCount();
+      window[name].render();
+    });
+};
 
 //Interfaces
 
@@ -265,11 +276,13 @@ function set_div_visible(div_id) {
 function OpenInterface(interface, data) {
     switch (interface) {
         case "commitments_grid":
-            document.getElementById("commitments_grid").InnerHTML = "";
-            initiate_grid("commitments_grid", commitments_columns(Locate), data);
-            set_div_visible("commitments_grid");
+            initiate_grid(interface, commitments_columns(Locate), data);
+            break;
+        case "complaints_grid":
+            initiate_grid(interface, complaints_columns(Locate), data);
             break;
     };
+    set_div_visible(interface);
 };
 
 function clean() {

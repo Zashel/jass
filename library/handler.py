@@ -109,11 +109,15 @@ class Handler(VirtualGPIOBaseHandler, WebSocketBaseHandler):
             self._app.config["commitments_selectors"]["status"].split("|")
         ))
         self._app.websocket.send_all(SetVariableSignal(
-            "complaint_type_selections",
-            self._app.config["complaints_selectors"]["type"].split("|")
+            "complaint_reason_selections",
+            self._app.config["complaints_selectors"]["reason"].split("|")
         ))
         self._app.websocket.send_all(OpenInterfaceSignal(
             "commitments_grid",
+            self._app.data.commitments.to_send()
+        ))
+        self._app.websocket.send_all(OpenInterfaceSignal(
+            "complaints_grid",
             self._app.data.commitments.to_send()
         ))
 
