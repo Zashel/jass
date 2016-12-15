@@ -6,24 +6,25 @@ var complaint_type_selections = []
 // Messages parser
 function parse_data(data) {
     console.log(data)
-    if (data.signal === "ping") { //Cambiar a Switch
-        console.log("pong");
-        send_pong();
-    } else if (data.signal === "message") {
-        console.log(data.text);
-    } else if (data.signal === "bye") {
-        console.log("Connection close as requested by server");
-        webSocket.close();
-    } else if (data.signal == "drawnewinterface") {
-        if (data.type_parent == "TagName") {
-            document.getElementsByTagName(data.parent_name)[0].innerHTML = data.interface;
-        } else if (data.type_parent == "Id") {
-            document.getElementById(data.parent_name).innerHTML = data.interface;
-        };
-    } else if (data.signal == "openinterface") {
-        OpenInterface(data.interface, data.data)
-    } else if (data.signal == "setvariable") {
-        window[data.variable] = data.json
+    switch (data.signal) {
+        case "ping":
+            console.log("pong");
+            send_pong();
+        case "message":
+            console.log(data.text);
+        case "bye":
+            console.log("Connection close as requested by server");
+            webSocket.close();
+        case "drawnewinterface":
+            if (data.type_parent == "TagName") {
+                document.getElementsByTagName(data.parent_name)[0].innerHTML = data.interface;
+            } else if (data.type_parent == "Id") {
+                document.getElementById(data.parent_name).innerHTML = data.interface;
+            };
+        case "openinterface":
+            OpenInterface(data.interface, data.data)
+        case "setvariable":
+            window[data.variable] = data.json
     };
 };
 
