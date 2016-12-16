@@ -1,4 +1,4 @@
-var locale = {};
+var local_strings = {};
 var commitment_type_selections = [];
 var commitment_status_selections = [];
 var complaint_reason_selections = [];
@@ -37,6 +37,11 @@ function parse_data(data) {
             break;
         case "setdivvisible":
             set_div_visible(data.div_id)
+            break;
+        case "setdataset":
+            window[data.interface].setData(data.data, false)
+            window[data.interface].invalidateAllRows();
+            window[data.interface].render();
             break;
     };
 };
@@ -94,6 +99,7 @@ function signal(signal, datos={}) {
     for (dato in datos) {
         result[dato] = datos[dato]
     }
+    console.log(JSON.stringify(result))
     return JSON.stringify(result)
 };
 
@@ -123,6 +129,16 @@ function send_open_interface(interface) {
         ));
 };
 
+function send_action_interface(action, interface, variables={}) {
+    webSocket.send(signal(
+        "actioninterface", {
+            "action": action,
+            "interface": interface,
+            "variables": JSON.stringify(variables)
+            }
+        ));
+};
+
 function send_hi() {
     webSocket.send(signal("hi"))
 };
@@ -138,11 +154,56 @@ function hour_mask(field) {
 
 //Editors:
 
+function DateEditor(args) {
+    var $date;
+    var scope = this;
+    this.init = function () {
+      $date = $("<INPUT type='date'/>")
+          .appendTo(args.container)
+          .bind("keydown", scope.handleKeyDown);
+      scope.focus();
+    };
+    this.handleKeyDown = function (e) {
+      if (e.keyCode == $.ui.keyCode.LEFT || e.keyCode == $.ui.keyCode.RIGHT || e.keyCode == $.ui.keyCode.TAB) {
+        e.stopImmediatePropagation();
+      }
+    };
+    this.destroy = function () {
+      $(args.container).empty();
+    };
+    this.focus = function () {
+      $date.focus();
+    };
+    this.serializeValue = function () {
+      return {date: $date.val()};
+    };
+    this.applyValue = function (item, state) {
+      item.date = state.date;
+      item[args.column.field] = state.date;
+    };
+    this.loadValue = function (item) {
+      $date.val(item.date);
+    };
+    this.isValueChanged = function () {
+      return args.item.date != $date.val();
+    };
+    this.validate = function () {
+      return {valid: true, msg: null};
+    };
+    this.init();
+  }
+
+function DateFormatter(row, cell, value, columnDef, dataContext) {
+    return new Date(value).toLocaleDateString();
+}
+
+
 function HourEditor(args) {
     var $hour;
     var scope = this;
     this.init = function () {
-      $hour = $("<INPUT type='text' onkeyup='hour_mask(this)' maxlength='5' placeholder='hh:mm' />")
+      //$hour = $("<INPUT type='text' onkeyup='hour_mask(this)' maxlength='5' placeholder='hh:mm' />")
+      $hour = $("<INPUT type='time'/>")
           .appendTo(args.container)
           .bind("keydown", scope.handleKeyDown);
       scope.focus();
@@ -163,6 +224,9 @@ function HourEditor(args) {
     };
     this.applyValue = function (item, state) {
       item.hour = state.hour;
+      item[args.column.field] = state.hour;
+      console.log(state.hour)
+      console.log(args.column.field)
     };
     this.loadValue = function (item) {
       $hour.val(item.hour);
@@ -177,7 +241,7 @@ function HourEditor(args) {
   }
 
 function SelectorFormatter(row, cell, value, columnDef, dataContext) {
-    return locale[value];
+    return local_strings[value];
 }
 
 function SelectorEditor(items) {
@@ -190,7 +254,7 @@ function SelectorEditor(items) {
           for (var item in items) {
             item = items[item]
             select = select.concat(
-              "<OPTION value='"+item+"'>"+locale[item]+"</OPTION>"
+              "<OPTION value='"+item+"'>"+local_strings[item]+"</OPTION>"
             )
           };
           select = select.concat("</SELECT>")
@@ -231,9 +295,8 @@ function SelectorEditor(items) {
     return Editor
 }
 
-
 function Locate(field) {
-    data = locale[field];
+    data = local_strings[field];
     if (data == undefined) {
         return field;
     } else {
@@ -242,6 +305,8 @@ function Locate(field) {
 }
 
 //Grids
+var isAsc = true;
+
 var grid_options = {
     editable: true,
     enableCellNavigation: true,
@@ -255,11 +320,23 @@ var grid_options = {
 function initiate_grid(name, columns, data) {
     window[name] = new Slick.Grid("#"+name, data, columns, grid_options);
     window[name].onAddNewRow.subscribe(function (e, args) {
-      var item = args.item;
-      window[name].invalidateRow(data.length);
-      data.push(item);
-      window[name].updateRowCount();
-      window[name].render();
+        var item = args.item;
+        window[name].invalidateRow(data.length);
+        data.push(item);
+        window[name].updateRowCount();
+        window[name].render();
+    });
+    window[name].onSort.subscribe(function (e, args) {
+        var sorting;
+        switch (args.sortAsc) {
+            case false:
+                sorting = "Desc";
+                break;
+            default:
+                sorting = "Asc";
+                break;
+        };
+        send_action_interface("sort_grid", name, {"field":args.sortCol.field, "sorting": sorting})
     });
 };
 

@@ -79,11 +79,21 @@ class Handler(VirtualGPIOBaseHandler, WebSocketBaseHandler):
     def signal_openinterface(self, signal, addr):
         pass
 
-    def signal_closeinterface(self, interface):
+    def signal_closeinterface(self, signal, addr):
         pass
 
-    def signal_actioninterface(self, action, interface, variables):
-        pass
+    def signal_actioninterface(self, signal, addr):
+        action = signal.action
+        interface = signal.interface
+        variables = signal.variables
+        if action == "sort_grid":
+            field, sorting = variables["field"], variables["sorting"]
+            data_name = interface.replace("_grid", "")
+            data = self._app.data.__getattribute__(data_name)
+            data.set_sort(field, sorting)
+            data.sort()
+            self._app.websocket.send_all(SetDatasetSignal(interface, data.to_send()))
+            
 
     def signal_pong(self, signal=None, addr=None):
         print("pong")
@@ -97,7 +107,7 @@ class Handler(VirtualGPIOBaseHandler, WebSocketBaseHandler):
     def signal_hi(self, signal=None, addr=None):
         print("hi")
         self._app.websocket.send_all(SetVariableSignal(
-            "locale",
+            "local_strings",
             Locale(self._app.config["JAss"]["location"]).to_dict()
             ))
         self._app.websocket.send_all(SetVariableSignal(

@@ -50,18 +50,21 @@
                 //{id:"batch_name", name:Locate("batch_name"), field:"batch_name", editor:Slick.Editors.Text,
                 //    minWidth:60},
                 //{id:"year", name:Locate("year"), field:"year", minWidth:60},
-                {id:"user", name:Locate("user"), field:"user", minWidth:60},
+                {id:"user", name:Locate("user"), field:"user", minWidth:60, sortable: true},
                 {id:"customer_id", name:Locate("customer_id"), field:"customer_id", editor:Slick.Editors.Text,
-                    minWidth:60},
+                    minWidth:60, sortable: true},
                 {id:"contact_phone", name:Locate("contact_phone"), field:"contact_phone",
-                    editor:Slick.Editors.Text, minWidth:60},
-                {id:"day", name:Locate("day"), field:"day", editor:Slick.Editors.Date, minWidth:60},
-                {id:"hour", name:Locate("hour"), field:"hour", editor:HourEditor, minWidth:60},
+                    editor:Slick.Editors.Text, minWidth:60, sortable: true},
+                {id:"day", name:Locate("day"), field:"day", editor:DateEditor, minWidth:60, sortable: true,
+                    formatter:DateFormatter},
+                {id:"hour", name:Locate("hour"), field:"hour", editor:HourEditor, minWidth:60, sortable: true},
                 {id:"type", name:Locate("type"), field:"type", editor:SelectorEditor(commitment_type_selections),
-                    formatter:SelectorFormatter, minWidth:60},
+                    formatter:SelectorFormatter, minWidth:60, sortable: true},
                 {id:"status", name:Locate("status"), field:"status",
-                    editor:SelectorEditor(commitment_status_selections), formatter:SelectorFormatter, minWidth:60},
-                {id:"comment", name:Locate("comment"), field:"comment", editor:Slick.Editors.LongText, minWidth:60}
+                    editor:SelectorEditor(commitment_status_selections), formatter:SelectorFormatter, minWidth:60,
+                    sortable: true},
+                {id:"comment", name:Locate("comment"), field:"comment", editor:Slick.Editors.LongText, minWidth:60,
+                    sortable: true}
                 ];
             };
             var complaints_columns = function(Locate) { return [
@@ -69,15 +72,18 @@
                 //{id:"batch_name", name:Locate("batch_name"), field:"batch_name", editor:Slick.Editors.Text,
                 //    minWidth:60},
                 //{id:"year", name:Locate("year"), field:"year", minWidth:60},
-                {id:"user", name:Locate("user"), field:"user", minWidth:60},
+                {id:"user", name:Locate("user"), field:"user", minWidth:60, sortable: true},
                 {id:"customer_id", name:Locate("customer_id"), field:"customer_id", editor:Slick.Editors.Text,
-                    minWidth:60},
+                    minWidth:60, sortable: true},
                 {id:"contact_phone", name:Locate("contact_phone"), field:"contact_phone",
-                    editor:Slick.Editors.Text, minWidth:60},
-                {id:"day", name:Locate("day"), field:"day", editor:Slick.Editors.Date, minWidth:60},
+                    editor:Slick.Editors.Text, minWidth:60, sortable: true},
+                {id:"day", name:Locate("day"), field:"day", editor:DateEditor, minWidth:60, sortable: true,
+                    formatter:DateFormatter},
                 {id:"reason", name:Locate("reason"), field:"reason",
-                    editor:SelectorEditor(complaint_reason_selections), formatter:SelectorFormatter, minWidth:60},
-                {id:"comment", name:Locate("comment"), field:"comment", editor:Slick.Editors.LongText, minWidth:60}
+                    editor:SelectorEditor(complaint_reason_selections), formatter:SelectorFormatter, minWidth:60,
+                    sortable: true},
+                {id:"comment", name:Locate("comment"), field:"comment", editor:Slick.Editors.LongText, minWidth:60,
+                    sortable: true}
                 ];
             };
         </SCRIPT>
