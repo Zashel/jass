@@ -83,10 +83,13 @@ class Handler(VirtualGPIOBaseHandler, WebSocketBaseHandler):
         pass
 
     def signal_actioninterface(self, signal, addr):
-        action = signal.action
+        print("Got an action")
+        action = signal.please_do
         interface = signal.interface
         variables = signal.variables
+        print(action)
         if action == "sort_grid":
+            print("Let's sort!")
             field, sorting = variables["field"], variables["sorting"]
             data_name = interface.replace("_grid", "")
             data = self._app.data.__getattribute__(data_name)

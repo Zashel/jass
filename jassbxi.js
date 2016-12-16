@@ -7,6 +7,8 @@ var commitment_grid;
 var commitment_grid;
 var complaint_grid;
 
+var last_sent;
+
 // Messages parser
 function parse_data(data) {
     console.log(data)
@@ -39,6 +41,7 @@ function parse_data(data) {
             set_div_visible(data.div_id)
             break;
         case "setdataset":
+            console.log(data)
             window[data.interface].setData(data.data, false)
             window[data.interface].invalidateAllRows();
             window[data.interface].render();
@@ -99,8 +102,9 @@ function signal(signal, datos={}) {
     for (dato in datos) {
         result[dato] = datos[dato]
     }
-    console.log(JSON.stringify(result))
-    return JSON.stringify(result)
+    final = JSON.stringify(result)
+    console.log(final)
+    return final
 };
 
 function send_pong() {
@@ -130,13 +134,19 @@ function send_open_interface(interface) {
 };
 
 function send_action_interface(action, interface, variables={}) {
-    webSocket.send(signal(
+    var final_vars;
+    for (name in variables) {
+        final_vars = final_vars+"|"+variables[name];
+    };
+    to_send = signal(
         "actioninterface", {
-            "action": action,
+            "please_do": action,
             "interface": interface,
-            "variables": JSON.stringify(variables)
+            "variables": variables
             }
-        ));
+        );
+    console.log(to_send)
+    webSocket.send(to_send);
 };
 
 function send_hi() {
