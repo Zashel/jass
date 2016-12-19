@@ -44,7 +44,7 @@ ActionInterfaceSignal = Signal("actioninterface", ("please_do", "interface", "va
 LocaleSignal = Signal("locale", ("locale",), (dict,))
 SetVariableSignal = Signal("setvariable", ("variable", "json"), (str, object))
 SetDivVisibleSignal = Signal("setdivvisible", ("div_id", ), (str, ))
-SetDatasetSignal = Signal("setdataset", ("interface", "data"), (str, str))
+SetDatasetSignal = Signal("setdataset", ("interface", "data"), (str, object))
 
 HiSignal = Signal("hi")
 DrawNewInterfaceSignal = Signal("drawnewinterface", ("type_parent", "parent_name", "interface"),

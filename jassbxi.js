@@ -3,9 +3,8 @@ var commitment_type_selections = [];
 var commitment_status_selections = [];
 var complaint_reason_selections = [];
 
-var commitment_grid;
-var commitment_grid;
-var complaint_grid;
+var commitments_grid;
+var complaints_grid;
 
 var last_sent;
 
@@ -41,10 +40,11 @@ function parse_data(data) {
             set_div_visible(data.div_id)
             break;
         case "setdataset":
-            console.log(data)
+            console.log(data.interface)
             window[data.interface].setData(data.data, false)
             window[data.interface].invalidateAllRows();
             window[data.interface].render();
+            console.log(window[data.interface].getData())
             break;
     };
 };
@@ -103,7 +103,6 @@ function signal(signal, datos={}) {
         result[dato] = datos[dato]
     }
     final = JSON.stringify(result)
-    console.log(final)
     return final
 };
 

@@ -94,7 +94,6 @@ class Handler(VirtualGPIOBaseHandler, WebSocketBaseHandler):
             data_name = interface.replace("_grid", "")
             data = self._app.data.__getattribute__(data_name)
             data.set_sort(field, sorting)
-            data.sort()
             self._app.websocket.send_all(SetDatasetSignal(interface, data.to_send()))
             
 

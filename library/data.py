@@ -62,14 +62,14 @@ class SignaledCsdb(CsvAsDb):
     def set_active(self, *args, **kwargs):
         if self._active_row is not None:
             emit(UnlockRowSignal(self._file_path, self._data[self._active_row]["unique_id"]))
-        self.set_active(*args, **kwargs)
-        emit(LockRowSignal(self._file_path, super()._data[self._active_row]["unique_id"]))
+        super().set_active(*args, **kwargs)
+        emit(LockRowSignal(self._file_path, self._data[self._active_row]["unique_id"]))
 
-    def _set_index(self, field):
+    def _sset_index(self, field):
         super().set_index(field)
 
     def set_index(self, field):
-        self._set_index(field)
+        self._sset_index(field)
         emit(NewIndexSignal(self._file_path, field))
 
     def write(self, *args, **kwargs):
@@ -84,9 +84,9 @@ class SignaledCsdb(CsvAsDb):
 
     def to_send(self):
         final = list()
-        for row in self._data:
+        for row in self:
             rdict = {"rowid": row}
-            rdict.update(dict(self._data[row]))
+            rdict.update(dict(self[row]))
             final.append(rdict)
         return final
 
@@ -103,7 +103,8 @@ class Data():
                 self._config.local_path,
                 self._config["commitments"]["file"]
                 )
-        self._commitments = SignaledCsdb(self._remote_commitments)
+        self._commitments_index = self._config["commitments"]["index"].split("|")
+        self._commitments = SignaledCsdb(self._remote_commitments, index=self._commitments_index)
         self._commitments.write_to(self._local_commitments)
         self._remote_complaints = search_win_drive(os.path.join(
             self._config["data"]["remote"],
@@ -113,7 +114,8 @@ class Data():
             self._config.local_path,
             self._config["complaints"]["file"]
         )
-        self._complaints = SignaledCsdb(self._remote_complaints)
+        self._complaints_index = self._config["complaints"]["index"].split("|")
+        self._complaints = SignaledCsdb(self._remote_complaints, index=self._complaints_index)
         self._complaints.write_to(self._local_complaints)
 
     @property
