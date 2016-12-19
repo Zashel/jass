@@ -7,6 +7,7 @@ var commitments_grid;
 var complaints_grid;
 
 var last_sent;
+var active_row;
 
 // Messages parser
 function parse_data(data) {
@@ -346,6 +347,13 @@ function initiate_grid(name, columns, data) {
                 break;
         };
         send_action_interface("sort_grid", name, {"field":args.sortCol.field, "sorting": sorting})
+    });
+    window[name].onActiveCellChanged .subscribe(function (e, args) {
+        var row = args.row;
+        if (row!=active_row) {
+            active_row = row;
+            send_action_interface("set_active", name, {"row":window[name].getData()[row]["rowid"]})
+        };
     });
 };
 

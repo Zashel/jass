@@ -95,6 +95,11 @@ class Handler(VirtualGPIOBaseHandler, WebSocketBaseHandler):
             data = self._app.data.__getattribute__(data_name)
             data.set_sort(field, sorting)
             self._app.websocket.send_all(SetDatasetSignal(interface, data.to_send()))
+        if action == "set_active":
+            print("Active {} in {}".format(variables["row"], interface))
+            data_name = interface.replace("_grid", "")
+            data = self._app.data.__getattribute__(data_name)
+            data.set_active(variables["row"])
             
 
     def signal_pong(self, signal=None, addr=None):
