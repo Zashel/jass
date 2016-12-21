@@ -79,6 +79,12 @@ def execute():
 
     finally:
         print("farewell")
+        app.data._commitments.write_to(
+            os.path.join(search_win_drive(app._config["data"]["remote"]), app._config["commitments"]["file"])
+            )
+        app.data._complaints.write_to(
+            os.path.join(search_win_drive(app._config["data"]["remote"]), app._config["complaints"]["file"])
+            )
         app.vgpio.disconnect()
 
 

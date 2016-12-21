@@ -47,6 +47,12 @@ function parse_data(data) {
             window[data.interface].render();
             console.log(window[data.interface].getData())
             break;
+        case "changerow":
+            console.log(data)
+            break;
+        case "newrow":
+            console.log(data)
+            break;
     };
 };
 
@@ -195,7 +201,9 @@ function DateEditor(args) {
       $date.val(item.date);
     };
     this.isValueChanged = function () {
-      return args.item.date != $date.val();
+      if ($date.val()!="dd/mm/aaaa") {
+        return args.item.date != $date.val();
+      };
     };
     this.validate = function () {
       return {valid: true, msg: null};
@@ -242,7 +250,9 @@ function HourEditor(args) {
       $hour.val(item.hour);
     };
     this.isValueChanged = function () {
-      return args.item.hour != $hour.val();
+      if ($hour.val() != "hh:mm") {
+        return args.item.hour != $hour.val();
+      };
     };
     this.validate = function () {
       return {valid: true, msg: null};
@@ -333,6 +343,7 @@ function initiate_grid(name, columns, data) {
         var item = args.item;
         window[name].invalidateRow(data.length);
         data.push(item);
+        send_action_interface("new_row", name, {"row": window[name].getData()[data.length]})
         window[name].updateRowCount();
         window[name].render();
     });
@@ -354,6 +365,10 @@ function initiate_grid(name, columns, data) {
             active_row = row;
             send_action_interface("set_active", name, {"row":window[name].getData()[row]["rowid"]})
         };
+    });
+    window[name].onCellChange .subscribe(function (e, args) {
+        var column = window[name].getColumns()[args.cell]["field"];
+        send_action_interface("update_reg", name, {"field":column, "value":args.item[column]})
     });
 };
 

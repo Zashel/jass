@@ -2,6 +2,7 @@ from zashel.virtualgpio import VirtualGPIOBaseHandler
 from zashel.websocket import WebSocketBaseHandler
 from .config import Locale
 from .signals import *
+import time
 
 class Handler(VirtualGPIOBaseHandler, WebSocketBaseHandler):
     def __init__(self, app):
@@ -51,20 +52,34 @@ class Handler(VirtualGPIOBaseHandler, WebSocketBaseHandler):
             datafile = self._app.data.commitments
         return datafile
 
+    def datagrid(self, file):
+        datagrid = None
+        if file == self._config["complaints"]["file"]:
+            datagrid = "complaints_grid"
+        elif file == self._config["commitments"]["file"]:
+            datagrid = "commitments_grid"
+        return datagrid
+
     def signal_changedrow(self, file, unique_id, field, value):
         datafile = self.datafile(file)
         if datafile is not None:
             datafile.modify_by_unique_id(unique_id, field, value)
+        interface = self.datagrid(file)
+        self._app.websocket.send_all(ChangedRowSignal(file, unique_id, field, value))
 
     def signal_newrow(self, file, data):
         datafile = self.datafile(file)
         if datafile is not None:
             datafile._insert_row(file, data)
+        interface = self.datagrid(file)
+        self._app.websocket.send_all(NewRowSignal(file, data))
 
     def signal_delrow(self, file, unique_id):
         datafile = self.datafile(file)
         if datafile is not None:
             datafile._del_row_by_unique_id(unique_id)
+        interface = self.datagrid(file)
+        self._app.websocket.send_all(SetDatasetSignal(interface, datafile.to_send()))
 
     def signal_newindex(self, file, field):
         datafile = self.datafile(file)
@@ -88,19 +103,30 @@ class Handler(VirtualGPIOBaseHandler, WebSocketBaseHandler):
         interface = signal.interface
         variables = signal.variables
         print(action)
+        data_name = interface.replace("_grid", "")
         if action == "sort_grid":
             print("Let's sort!")
             field, sorting = variables["field"], variables["sorting"]
-            data_name = interface.replace("_grid", "")
             data = self._app.data.__getattribute__(data_name)
             data.set_sort(field, sorting)
             self._app.websocket.send_all(SetDatasetSignal(interface, data.to_send()))
-        if action == "set_active":
+        elif action == "set_active":
             print("Active {} in {}".format(variables["row"], interface))
-            data_name = interface.replace("_grid", "")
             data = self._app.data.__getattribute__(data_name)
             data.set_active(variables["row"])
-            
+        elif action == "update_reg":
+            field = variables["field"]
+            value = variables["value"]
+            data = self._app.data.__getattribute__(data_name)
+            data[field] = value
+            while True:
+                if data_name not in self._app._file_lock:
+                    break
+                time.sleep(1)
+            data.write()
+            print("guardado")
+        elif action == "new_row":
+            print(variables["row"])
 
     def signal_pong(self, signal=None, addr=None):
         print("pong")

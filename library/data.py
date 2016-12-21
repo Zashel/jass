@@ -61,9 +61,16 @@ class SignaledCsdb(CsvAsDb):
 
     def set_active(self, *args, **kwargs):
         if self._active_row is not None:
-            emit(UnlockRowSignal(self._file_path, self._data[self._active_row]["unique_id"]))
+            print(self._data)
+            try:
+                emit(UnlockRowSignal(self._file_path, self._data[self._active_row]["unique_id"]))
+            except:
+                pass
         super().set_active(*args, **kwargs)
-        emit(LockRowSignal(self._file_path, self._data[self._active_row]["unique_id"]))
+        try:
+            emit(LockRowSignal(self._file_path, self._data[self._active_row]["unique_id"]))
+        except:
+            pass
 
     def _sset_index(self, field):
         super().set_index(field)
