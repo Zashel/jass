@@ -20,6 +20,8 @@ if __name__ == "__main__":
         setting.wait(2)
     except subprocess.TimeoutExpired:
         pass
-    with subprocess.Popen([git, "pull", os.path.join(this_path, r"Python\lib\site-packages\zashel\websocket")]) as git:
+    git = subprocess.Popen(["git", "reset", "--hard", "HEAD"])
+    git.wait()
+    with subprocess.Popen([git, "pull", os.path.join(this_path, r"Python/Lib/site-packages/zashel/Utils"), "--allow-unrelated-histories"]) as git:
         exit = git.wait()
         print(exit)
