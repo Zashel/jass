@@ -43,7 +43,7 @@ if __name__ == "__main__":
             raise WhatTheHellError(repo)
         with subprocess.Popen([git, "pull"], stdout=subprocess.PIPE) as git_process:
             exit = git_process.wait()
-            print("Exit: {}".format(exit))
+            #print("Exit: {}".format(exit))
             if exit == 1:
                 sys.exit(1)
 
