@@ -31,6 +31,8 @@ if __name__ == "__main__":
             os.chdir(repo)
         except:
             raise WhatTheHellError(repo)
+        sb = subprocess.Popen([git, "stash"], stdout=subprocess.PIPE)
+        sb.wait()
         with subprocess.Popen([git, "pull"], stdout=subprocess.PIPE) as git_process:
             exit = git_process.wait()
             if exit == 0:

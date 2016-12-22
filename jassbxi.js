@@ -103,7 +103,7 @@ function get_now() {
     return nowStr
 };
 
-function signal(signal, datos={}) {
+function signal(signal, datos) {
     if (datos == undefined)  {datos=[]};
     result = {
             "signal": signal,
