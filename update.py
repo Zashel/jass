@@ -24,18 +24,22 @@ full_repositories.append(this_path)
 class WhatTheHellError(Exception):
     pass
 
+def pull(repo):
+    print("Updating {}".format(repo))
+    try:
+        os.chdir(repo)
+    except:
+        raise WhatTheHellError(repo)
+    with subprocess.Popen([git, "pull"], stdout=subprocess.PIPE) as git_process:
+        exit = git_process.wait()
+        if exit == 0:
+            print("OK")
+        else:
+            sb = subprocess.Popen([git, "stash"], stdout=subprocess.PIPE)
+            sb.wait()
+            pull(repo)
 if __name__ == "__main__":
     for index, repo in enumerate(full_repositories):
-        print("Updating {}".format(repo))
-        try:
-            os.chdir(repo)
-        except:
-            raise WhatTheHellError(repo)
-        sb = subprocess.Popen([git, "stash"], stdout=subprocess.PIPE)
-        sb.wait()
-        with subprocess.Popen([git, "pull"], stdout=subprocess.PIPE) as git_process:
-            exit = git_process.wait()
-            if exit == 0:
-                print("OK")
+        pull(repo)
 
     sys.exit(0)
