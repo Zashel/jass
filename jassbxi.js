@@ -57,8 +57,10 @@ function parse_data(data) {
 };
 
 // Initialize WebSocket
-function initWebSocket(direction, port, secure_connection, protocols=[], parser=parse_data) {
+function initWebSocket(direction, port, secure_connection, protocols, parser) {
     // Getting the connection String for WebSocket
+    if (protocols == undefined)  {protocols=[]};
+    if (parser == undefined)  {parser=parse_data};
     connString = "://"+direction+":"+port;
     if (secure_connection === true) {
         connString = "wss"+connString
@@ -102,6 +104,7 @@ function get_now() {
 };
 
 function signal(signal, datos={}) {
+    if (datos == undefined)  {datos=[]};
     result = {
             "signal": signal,
             "date": get_now()
@@ -139,7 +142,8 @@ function send_open_interface(interface) {
         ));
 };
 
-function send_action_interface(action, interface, variables={}) {
+function send_action_interface(action, interface, variables) {
+    if (variables == undefined)  {variables={}};
     var final_vars;
     for (name in variables) {
         final_vars = final_vars+"|"+variables[name];
