@@ -25,16 +25,6 @@ class WhatTheHellError(Exception):
     pass
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Initialize J-Ass Updater")
-    parser.add_argument("-p", type=str, help="Network Password")
-    args = parser.parse_args()
-    password = args.p
-    setting = subprocess.Popen(
-            [git, "config", "--global", "http.proxy", "http://{}:{}@{}".format(username, password, proxy)])
-    try:
-        setting.wait(2)
-    except subprocess.TimeoutExpired:
-        pass
     for index, repo in enumerate(full_repositories):
         print("Updating {}".format(repo))
         try:
@@ -43,8 +33,7 @@ if __name__ == "__main__":
             raise WhatTheHellError(repo)
         with subprocess.Popen([git, "pull"], stdout=subprocess.PIPE) as git_process:
             exit = git_process.wait()
-            #print("Exit: {}".format(exit))
-            if exit == 1:
-                sys.exit(1)
+            if exit == 0:
+                print("OK")
 
     sys.exit(0)
