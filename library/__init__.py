@@ -72,7 +72,7 @@ def execute():
                           "--app=file:///{}".format(os.path.join(
                               os.getcwd(),
                               app.config["WebSocket"]["html"]))])
-        time.sleep(2)
+        time.sleep(10)
         check(app)
         while app.executing is True:
             pass
