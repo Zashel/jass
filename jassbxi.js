@@ -47,7 +47,7 @@ function parse_data(data) {
             window[data.interface].render();
             console.log(window[data.interface].getData())
             break;
-        case "changerow":
+        case "changedrow":
             console.log(data)
             break;
         case "newrow":

@@ -65,7 +65,7 @@ class Handler(VirtualGPIOBaseHandler, WebSocketBaseHandler):
         if datafile is not None:
             datafile.modify_by_unique_id(unique_id, field, value)
         interface = self.datagrid(file)
-        self._app.websocket.send_all(ChangedRowSignal(file, unique_id, field, value))
+        self._app.websocket.send_all(ChangedRowSignal(file, unique_id, field, value)) #Seriously?
 
     def signal_newrow(self, file, data):
         datafile = self.datafile(file)
